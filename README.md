@@ -45,7 +45,7 @@ Built to streamline hiring, assess technical skills, and provide data-driven res
 
 bash
 
-git clone https://github.com/yourusername/Interview_quiz_Admin_Dashboard.git
+git clone https://github.com/220200107124/Interview_quiz_Admin_Dashboard.git
 
 cd Interview_quiz_Admin_Dashboard
 

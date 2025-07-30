@@ -168,7 +168,21 @@ if (!isTechDifficultyUnique(newCandidate.tech, newCandidate.difficulty)) {
   };
   // <-----------------handle the sent quiz is exist -------->
 
-const handleSendTest = (candidate) => {
+// const handleSendTest = (candidate) => {
+//   const matchingQuiz = quizzes.find(
+//     quiz =>
+//       String(quiz.category).toLowerCase() === String(candidate.tech).toLowerCase() &&
+//       String(quiz.difficulty).toLowerCase() === String(candidate.difficulty).toLowerCase()
+//   );
+
+//   if (!matchingQuiz) {
+//     return alert(`No quiz found for ${candidate.tech} at difficulty ${candidate.difficulty}`);
+//   }
+
+//   // else, proceed
+//   alert(`Test sent to ${candidate.email} for ${candidate.tech} at difficulty ${candidate.difficulty}`);
+// };
+const handleSendTest = async (candidate) => {
   const matchingQuiz = quizzes.find(
     quiz =>
       String(quiz.category).toLowerCase() === String(candidate.tech).toLowerCase() &&
@@ -179,9 +193,19 @@ const handleSendTest = (candidate) => {
     return alert(`No quiz found for ${candidate.tech} at difficulty ${candidate.difficulty}`);
   }
 
-  // else, proceed
-  alert(`Test sent to ${candidate.email} for ${candidate.tech} at difficulty ${candidate.difficulty}`);
+  try {
+    const res = await axios.post(
+      `http://localhost:8080/api/assign/${candidate._id}`,
+      { quizId: matchingQuiz._id }
+    );
+
+    alert(`✅ ${res.data.message}`);
+  } catch (err) {
+    console.error(err);
+    alert('❌ Failed to assign quiz');
+  }
 };
+
 
 
 

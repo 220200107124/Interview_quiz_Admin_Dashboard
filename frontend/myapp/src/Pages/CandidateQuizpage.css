@@ -108,3 +108,12 @@
 .submit-btn:hover {
   background: linear-gradient(90deg, #4338ca, #2563e2);
 }
+.error-message {
+  background-color: #ffe0e0;
+  color: #d8000c;
+  border: 1px solid #d8000c;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 14px;
+}

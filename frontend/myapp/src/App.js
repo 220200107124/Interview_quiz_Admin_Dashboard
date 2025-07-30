@@ -19,7 +19,8 @@ function App() {
       <Route path="/admin-login" element={<LoginWrapper />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/create-quiz" element={<CreateQuizpage />} />
-      <Route path="/quiz" element={<CandidateQuizpage />} />
+     <Route path="/quiz/:candidateId" element={<CandidateQuizpage />} />
+
       <Route path="/thank-you" element={<ThankYouPage />} />
       <Route path="/admin-candidate" element={<AdminCandidatePage />} />
       <Route  path='/admin-result' element={<AdminResult/>}/>

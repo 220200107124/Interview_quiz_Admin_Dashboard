@@ -11,8 +11,9 @@ let mailOptions={
   from:'reenatanchak@gmail.com',
   to:'reenatanchak@gmail.com',
   subject:'sending mail using node emailer',
-  text:'that was is easy'
+  text:'this is test mail from node emailer'
 };
+
 transporter.sendMail(mailOptions,function(error,info){
  if(error){
   console.log(error);
@@ -20,5 +21,5 @@ transporter.sendMail(mailOptions,function(error,info){
  else{
   console.log("email sent:"+info.response);
  }
-}
+} 
 );

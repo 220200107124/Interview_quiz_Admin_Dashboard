@@ -31,9 +31,11 @@ function AdminSideBar() {
           <button onClick={() => handleNavigate('/create-quiz')}>Create Quiz</button>
           <button onClick={() => handleNavigate('/admin-candidate')}>Candidates</button>
           <button onClick={() => handleNavigate('/admin-result')}>Results</button>
+          <button onClick={()=>handleNavigate('/quiz/:candidateId')}> CndidateQuizPage</button>
           <button onClick={handleLogout}>Logout</button>
         </nav>
       </aside>
+
 
       {/* Main content (placeholder) */}
       <div className="dashboard-content">

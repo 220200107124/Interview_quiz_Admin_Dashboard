@@ -27,7 +27,6 @@ Built to streamline hiring, assess technical skills, and provide data-driven res
 - React frontend
 - Node.js + Express backend
 - MongoDB database
-- RESTful APIs
 - Nodemailer integration for automated test emails
 
 ---

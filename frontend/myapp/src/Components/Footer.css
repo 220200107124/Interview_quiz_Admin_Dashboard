@@ -1,0 +1,23 @@
+.admin-footer {
+  margin-top: 24px;
+  padding: 12px 20px;            /* better to use fixed padding */
+  background: #2563eb;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .admin-footer {
+    font-size: 12px;
+    padding: 20px;               /* increase vertical padding on small screens for better touch area */
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-footer {
+    font-size: 11px;             /* even smaller font on very small screens */
+    padding: 14px;
+  }
+}

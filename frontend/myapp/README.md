@@ -33,8 +33,11 @@ Crafted to help HR teams and technical interviewers create, manage, and review q
 Clone and run locally:
 
 bash
-git clone https://github.com/your-username/react-interview-portal.git
+git clone https://github.com/220200107124/react-interview-portal.git
+
 cd react-interview-portal
+
 npm install
+
 npm start
 

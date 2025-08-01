@@ -22,8 +22,8 @@ Crafted to help HR teams and technical interviewers create, manage, and review q
 - **React.js** (UI)
 - **React Router** (Navigation)
 - **NodeMailer** (Email service)
-- **Context API 
-- **CSS 
+- **Context API** 
+- **CSS**
 - **REST API** 
 
 ---

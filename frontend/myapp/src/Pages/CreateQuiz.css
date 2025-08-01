@@ -535,6 +535,32 @@ background: linear-gradient(135deg, #4facfe 0%, #2563e2 100%);
   font-size: 12px;
   margin-top: 4px;
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 0.4rem;
+}
+
+.pagination-btn {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  background:#007bff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination-btn.active {
+  background: #007bff;
+  color: #151414;
+  border-color: #007bff;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 
 
 

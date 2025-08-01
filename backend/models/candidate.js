@@ -27,7 +27,7 @@ const candidateSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ['Beginner', 'Intermediate', 'Advanced'] // optional, safer
+    enum: ['Easy','Beginner', 'Intermediate', 'Advanced'] // optional, safer
   }
 }, {
   timestamps: true

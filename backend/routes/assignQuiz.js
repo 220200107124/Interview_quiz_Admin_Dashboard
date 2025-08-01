@@ -19,8 +19,8 @@ router.post('/:candidateId', async (req, res) => {
     if (!quiz) return res.status(404).json({ error: 'Quiz not found' });
 
     // Assign quiz to candidate
-    candidate.quizId =' 68870e30c4889e4b7270ac71';
-    await candidate.save();
+    // candidate.quizId =' 68870e30c4889e4b7270ac71';
+    // await candidate.save();
 
     // Create transporter (Mailtrap)
     const transporter = nodemailer.createTransport({

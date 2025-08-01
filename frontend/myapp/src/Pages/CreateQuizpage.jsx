@@ -68,7 +68,8 @@ const CreateQuizpage = () => {
   const [currentQuiz, setCurrentQuiz] = useState(null);
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
-
+  const[currentPage ,setCurrentPage]=useState(1);
+  const pageSize=4;
   const categories = ['all', 'General', 'React', 'JavaScript', 'Node', 'Graphic', 'NextJs'];
   const difficulties = ['all', 'Easy', 'Beginner', 'Intermediate', 'Advanced'];
 
@@ -117,6 +118,12 @@ const CreateQuizpage = () => {
 //     setLoading(false);
 //   }
 // };
+
+
+//paginatestion logic
+
+
+
 const fetchQuizzes = async () => {
   try {
     setLoading(true);
@@ -142,7 +149,11 @@ const fetchQuizzes = async () => {
     
     return matchesSearch && matchesCategory && matchesDifficulty;
   });
-
+const totalPages=Math.ceil(filteredQuizzes.length/pageSize);
+ const paginatedQuizzes=filteredQuizzes.slice(
+  (currentPage-1)*pageSize,
+  currentPage* pageSize
+ );
   // Handle new quiz creation
   const handleCreateNewQuiz = () => {
     const newQuiz = {
@@ -157,7 +168,7 @@ const fetchQuizzes = async () => {
           correctAnswer: 0
         }
       ]
-    };
+    };        
     setCurrentQuiz(newQuiz);
     setShowQuizEditor(true);
   };
@@ -576,7 +587,7 @@ const handleSaveQuiz = async (updatedQuiz) => {
 
           {/* Quiz List */}
           <div className="quiz-grid">
-            {filteredQuizzes.map(quiz => (
+            {paginatedQuizzes.map(quiz => (
               <div key={quiz._id} className="quiz-card">
                 <div className="card-content">
                   <div className="card-header">
@@ -616,6 +627,36 @@ const handleSaveQuiz = async (updatedQuiz) => {
               </div>
             ))}
           </div>
+          {totalPages > 1 && (
+  <div className="pagination">
+    <button 
+      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+      className="pagination-btn"
+    >
+      Previous
+    </button>
+
+    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+      <button
+        key={page}
+        onClick={() => setCurrentPage(page)}
+        className={`pagination-btn ${page === currentPage ? 'active' : ''}`}
+      >
+        {page}
+      </button>
+    ))}
+
+    <button 
+      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+      disabled={currentPage === totalPages}
+      className="pagination-btn"
+    >
+      Next
+    </button>
+  </div>
+)}
+
 
           {filteredQuizzes.length === 0 && (
             <div className="empty-state">

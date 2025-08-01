@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Quiz = require('../models/quizzes');
 
-// Get all quizzes
+// Get all quizzes from the mongoDb Database
 router.get('/', async (req, res) => {
   try {
     const quizzes = await Quiz.find().sort({ createdAt: -1 });
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Create a quiz
+// Create the quiz
 router.post('/', async (req, res) => {
   try {
     const quiz = new Quiz(req.body);
@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Update a quiz
+// Update the  quiz 
 router.put('/:id', async (req, res) => {
   try {
     const updatedQuiz = await Quiz.findByIdAndUpdate(req.params.id, req.body, { new: true });

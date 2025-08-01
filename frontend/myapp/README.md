@@ -8,8 +8,8 @@ Crafted to help HR teams and technical interviewers create, manage, and review q
 
 ## ✨ Key Highlights
 
-✅ **Admin Dashboard** — Create and manage quizzes, questions, and schedules  
-✅ **Candidate Portal** — Secure login, quiz taking, and real-time timer  
+✅ **Admin Dashboard** — Create and manage quizzes, questions 
+✅ **Candidate Portal** — Secure login, quiz taking 
 ✅ **Automated Emails** — Send quiz invitations using NodeMailer integration  
 ✅ **Result Analysis** — Instantly view scores and candidate performance  
 ✅ **Responsive UI** — Seamless experience across desktop, tablet, and mobile  
@@ -22,9 +22,9 @@ Crafted to help HR teams and technical interviewers create, manage, and review q
 - **React.js** (UI)
 - **React Router** (Navigation)
 - **NodeMailer** (Email service)
-- **Context API / Redux** (State management)
-- **CSS / Styled-components** (Styling)
-- **REST API** (Backend integration)
+- **Context API 
+- **CSS 
+- **REST API** 
 
 ---
 

@@ -24,7 +24,7 @@ function AdminLogin({ onLogin }) {
             <path strokeLinecap="round" strokeLinejoin="round"
               d="M12 3L4 6v6c0 5.25 3.75 10.125 8 11 4.25-.875 8-5.75 8-11V6l-8-3z" />
           </svg>
-          <h2>Admin Access</h2>
+          <h2> Questify  <br />Admin Access</h2>
           <p>Please authenticate to access the admin panel</p>
         </div>
 

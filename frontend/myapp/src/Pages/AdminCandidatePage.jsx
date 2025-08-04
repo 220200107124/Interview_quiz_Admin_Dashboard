@@ -33,7 +33,7 @@ const TrashIcon = () => (
 );
 
 const AdminCandidatePage = () => {
-  // ✅ State management
+  //  State management
   const [candidates, setCandidates] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(false);   // Global loader (fetch/add/edit/delete)
@@ -59,7 +59,7 @@ const AdminCandidatePage = () => {
   useEffect(() => {
     fetchCandidates();
     fetchQuizzes();
-  }, []);
+  }, [setCandidates,setQuizzes,setSending]);
 
   const fetchCandidates = async () => {
     setLoading(true);
@@ -82,7 +82,7 @@ const AdminCandidatePage = () => {
     }
   };
 
-  // ➕ Add new candidate
+  // Add new candidate
   const handleAddCandidate = async () => {
     if (!newCandidate.name || !newCandidate.lname || !newCandidate.email) {
       return alert('Please fill all fields');
@@ -107,7 +107,7 @@ const AdminCandidatePage = () => {
     }
   };
 
-  // ✏ Edit / update candidate
+  //  Edit / update candidate
   const handleEditCandidate = (candidate) => setEditingCandidate({ ...candidate });
 
   const handleUpdateCandidate = async () => {
@@ -123,7 +123,7 @@ const AdminCandidatePage = () => {
     }
   };
 
-  // 🗑 Delete candidate
+  //  Delete candidate
   const handleDeleteCandidate = async (id) => {
     if (window.confirm('Are you sure?')) {
       setLoading(true);

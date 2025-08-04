@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+require('dotenv').config();
+
 const Candidate = require('../models/candidate');
 const Quiz = require('../models/quizzes');
 const nodemailer = require('nodemailer');
@@ -26,28 +28,36 @@ router.post('/:candidateId', async (req, res) => {
     const transporter = nodemailer.createTransport({
       service:'gmail',
       auth: {
-        user: 'reenatanchak@gmail.com',
-        pass: 'anar rnaa rouw uwxn'
-      }
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+}
+
     });
 
     // Prepare email content
-    const quizLink = `http://localhost:3000/quiz/${quizId}`;
+   // Prepare email content with quiz title
+const quizLink = `SERVER_URI/quiz/${quizId}`;
+const mailOptions = {
+  from: '"Quiz Platform" <reenatanchak@gmail.com>',
+  to: candidate.email,
+  subject: `Your quiz "${quiz.title}" is ready!`,
+  text: `Hi ${candidate.name},
 
-    // Send email
-    await transporter.sendMail({
-      from: '"Quiz Platform" <reenatanchak@gmail.com>',
-      to: candidate.email,
-      subject: 'Your quiz is ready!',
-      text: `Hi ${candidate.name},
+Your quiz titled "${quiz.title}" is ready! 
 
-Your quiz is ready! Click the link to start: ${quizLink}
+Click the link below to start:
+${quizLink}
 
 Good luck!`
-    });
+};
 
-    //  Success response
-    res.json({ message: 'Quiz assigned and email sent successfully' });
+// Send email
+await transporter.sendMail(mailOptions);
+
+
+   //Success response
+res.json({ message: `Quiz "${quiz.title}" assigned and email sent successfully` });
+
   } catch (err) {
     console.log('Error in assigning quiz and sending email:', err);
     res.status(500).json({ error: 'Server error' });

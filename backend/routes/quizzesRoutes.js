@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+require('dotenv').config();
+
 const Quiz = require('../models/quizzes');
 
 // Get all quizzes from the mongoDb Database

@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+require('dotenv').config();
+
 const Result = require('../models/result');
 
 // GET /api/results - get all quiz results

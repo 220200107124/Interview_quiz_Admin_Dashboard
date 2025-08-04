@@ -10,9 +10,13 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [quizzes, setQuizzes] = useState([]);
 
+  //  Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const quizzesPerPage = 3; // adjust as needed
+
   useEffect(() => {
     fetchQuizzes();
-  }, []);
+  }, [setCurrentPage]);
 
   const fetchQuizzes = async () => {
     try {
@@ -39,6 +43,15 @@ function AdminDashboard() {
     }
   };
 
+  //  Calculate quizzes to show on current page
+  const indexOfLastQuiz = currentPage * quizzesPerPage;
+  const indexOfFirstQuiz = indexOfLastQuiz - quizzesPerPage;
+  const currentQuizzes = quizzes.slice(indexOfFirstQuiz, indexOfLastQuiz);
+
+  const totalPages = Math.ceil(quizzes.length / quizzesPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="dashboard-wrapper">
       <AdminSideBar />
@@ -60,34 +73,67 @@ function AdminDashboard() {
           {quizzes.length === 0 ? (
             <p>No quizzes found.</p>
           ) : (
-            <table>
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Difficulty</th>
-                  <th>Questions</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {quizzes.map((quiz) => (
-                  <tr key={quiz._id}>
-                    <td>{quiz.title}</td>
-                    <td>{quiz.category}</td>
-                    <td>{quiz.difficulty}</td>
-                    <td>{quiz.questions.length}</td>
-                    <td>
-                      <button className="manage-btn" onClick={() => navigate('/create-quiz', { state: { quiz } })}>Manage</button>
-                      <button className="deletes-btn" onClick={() => handleDeleteQuiz(quiz._id)}>Delete</button>
-                    </td>
+            <>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Difficulty</th>
+                    <th>Questions</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-        <Footer />
+                </thead>
+                <tbody>
+                  {currentQuizzes.map((quiz) => (
+                    <tr key={quiz._id}>
+                      <td>{quiz.title}</td>
+                      <td>{quiz.category}</td>
+                      <td>{quiz.difficulty}</td>
+                      <td>{quiz.questions.length}</td>
+                      <td>
+                        <button className="manage-btn" onClick={() => navigate('/create-quiz', { state: { quiz } })}>Manage</button>
+                        <button className="deletes-btn" onClick={() => handleDeleteQuiz(quiz._id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/*  Pagination buttons */}
+          {/*  Pagination buttons with Prev / Next */}
+<div className="pagination">
+  <button
+    onClick={() => paginate(currentPage - 1)}
+    disabled={currentPage === 1}
+    className="pagination-btn"
+  >
+    Prev
+  </button>
+
+  {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((number) => (
+    <button
+      key={number}
+      onClick={() => paginate(number)}
+      className={`pagination-btn ${currentPage === number ? 'active' : ''}`}
+    >
+      {number}
+    </button>
+  ))}
+
+      <button
+        onClick={() => paginate(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="pagination-btn"
+      >
+    Next
+  </button>
+</div>
+
+ </>
+)}
+</div>
+<Footer />
       </main>
     </div>
   );

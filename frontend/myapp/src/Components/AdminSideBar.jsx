@@ -13,17 +13,17 @@ function AdminSideBar() {
     setSidebarOpen(false); // auto close sidebar on mobile
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/admin-login');
-  };
+  // const handleLogout = () => {
+   
+  //   navigate('/admin-login');
+  // };
 
   return (
     <div className="dashboard-wrapper">
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
-          <h2 className="sidebar-title">QuizMaster</h2>
+          <h2 className="sidebar-title">Questify</h2>
           <button className="close-btn" onClick={toggleSidebar}>✕</button>
         </div>
         <nav className="sidebar-nav">
@@ -32,7 +32,18 @@ function AdminSideBar() {
           <button onClick={() => handleNavigate('/admin-candidate')}>Candidates</button>
           <button onClick={() => handleNavigate('/admin-result')}>Results</button>
           <button onClick={()=>handleNavigate('/quiz/:candidateId')}> CandidateQuizPage</button>
-          <button onClick={handleLogout}>Logout</button>
+<button
+  onClick={() => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      // Redirect or call logout function
+      window.location.href = '/admin-login';
+    }
+
+  }}
+>
+  Logout
+</button>
+
         </nav>
       </aside>
 

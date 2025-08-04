@@ -7,6 +7,7 @@ import CandidateQuizpage from './Pages/CandidateQuizpage';
 import ThankYouPage from './Pages/ThankYouPage';
 import AdminCandidatePage from './Pages/AdminCandidatePage';
 import AdminResult from './Pages/AdminResult';
+import TestCandidatePage from './Pages/TestCandidatePage';
 // import CandidateDetail from './Pages/CandidateDetail';
 
 
@@ -24,7 +25,8 @@ function App() {
       <Route path="/thank-you" element={<ThankYouPage />} />
       <Route path="/admin-candidate" element={<AdminCandidatePage />} />
       <Route  path='/admin-result' element={<AdminResult/>}/>
-     
+      <Route path='/test-candidate' element={<TestCandidatePage/>}/>
+      
     </Routes>
     
   );

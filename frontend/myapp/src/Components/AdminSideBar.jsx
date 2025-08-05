@@ -20,7 +20,7 @@ function AdminSideBar() {
 
   return (
     <div className="dashboard-wrapper">
-      {/* Sidebar */}
+      {/* Sidebar  */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
           <h2 className="sidebar-title">Questify</h2>
@@ -36,7 +36,7 @@ function AdminSideBar() {
   onClick={() => {
     if (window.confirm('Are you sure you want to logout?')) {
       // Redirect or call logout function
-      window.location.href = '/admin-login';
+      window.location.href = '/admin';
     }
 
   }}

@@ -6,6 +6,10 @@ const candidateRoutes = require('./routes/candidateRoutes');
 const AdminCreateQuizs = require('./routes/quizzesRoutes');
 const assignQuizRouter = require('./routes/assignQuiz');
 const resultRoutes = require('./routes/resultRouter');
+const Candidate = require('./models/quizzes'); // Adjust path
+const Quiz = require('./models/candidate'); // Adjust path
+const Result = require('./models/result'); // Adjust path
+
 // const candidateQuizRoutes = require('./routes/candidatequiz');
 
 const app = express();
@@ -22,18 +26,37 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB error:', err));
-app.get('/', (req, res) => {
-  res.send(`
-    <h2>✨ Backend Server is Running! ✨</h2>
-    <p>Available API Routes:</p>
-    <ul>
-      <li>GET/POST: <code>/api/candidates</code></li>
-      <li>GET/POST: <code>/api/quizzes</code></li>
-      <li>GET/POST: <code>/api/assign</code></li>
-      <li>GET/POST: <code>/api/results</code></li>
-    </ul>
-  `);
+app.get('/', async (req, res) => {
+  try {
+    const candidates = await Candidate.find().limit(5); // just showing top 5
+    const quizzes = await Quiz.find().limit(5);
+    const results = await Result.find().limit(5);
+
+    res.send(`
+      <h2>✨ Backend Server is Running! ✨</h2>
+      <p>Available API Routes:</p>
+      <ul>
+        <li><code>GET /api/candidates</code></li>
+        <li><code>GET /api/quizzes</code></li>
+        <li><code>GET /api/assign</code></li>
+        <li><code>GET /api/results</code></li>
+      </ul>
+      <hr />
+      <h3>📋 Sample Candidates:</h3>
+      <pre>${JSON.stringify(candidates, null, 2)}</pre>
+
+      <h3>📝 Sample Quizzes:</h3>
+      <pre>${JSON.stringify(quizzes, null, 2)}</pre>
+
+      <h3>📊 Sample Results:</h3>
+      <pre>${JSON.stringify(results, null, 2)}</pre>
+    `);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching data from MongoDB');
+  }
 });
+
 
 // app.use(/api/candidateQuizRoutes,candidateRoutes);
 

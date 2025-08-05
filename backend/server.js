@@ -23,8 +23,18 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB error:', err));
 app.get('/', (req, res) => {
-  res.send('✨ Backend server is running! ✨');
+  res.send(`
+    <h2>✨ Backend Server is Running! ✨</h2>
+    <p>Available API Routes:</p>
+    <ul>
+      <li>GET/POST: <code>/api/candidates</code></li>
+      <li>GET/POST: <code>/api/quizzes</code></li>
+      <li>GET/POST: <code>/api/assign</code></li>
+      <li>GET/POST: <code>/api/results</code></li>
+    </ul>
+  `);
 });
+
 // app.use(/api/candidateQuizRoutes,candidateRoutes);
 
 

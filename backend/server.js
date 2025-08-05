@@ -33,7 +33,7 @@ app.get('/', async (req, res) => {
     const results = await Result.find().limit(5);
 
     res.send(`
-      <h2>✨ Backend Server is Running! ✨</h2>
+      <h2> Backend Server is Running! </h2>
       <p>Available API Routes:</p>
       <ul>
         <li><code>GET /api/candidates</code></li>
@@ -42,13 +42,13 @@ app.get('/', async (req, res) => {
         <li><code>GET /api/results</code></li>
       </ul>
       <hr />
-      <h3>📋 Sample Candidates:</h3>
+      <h3> Sample Candidates:</h3>
       <pre>${JSON.stringify(candidates, null, 2)}</pre>
 
-      <h3>📝 Sample Quizzes:</h3>
+      <h3> Sample Quizzes:</h3>
       <pre>${JSON.stringify(quizzes, null, 2)}</pre>
 
-      <h3>📊 Sample Results:</h3>
+      <h3> Sample Results:</h3>
       <pre>${JSON.stringify(results, null, 2)}</pre>
     `);
   } catch (err) {

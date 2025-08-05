@@ -135,12 +135,13 @@ function AdminResult() {
   const navigate = useNavigate();
 
   const handleDashBoard = () => navigate('/admin');
+  const API_URL= 'https://interview-quiz-admin-dashboard.onrender.com'; 
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
         setLoading(true);
-        const res = await fetch('http://localhost:8080/api/results');  // adjust your backend endpoint
+        const res = await fetch(`${API_URL}/api/results`);  // adjust your backend endpoint
         const data = await res.json();
         setResults(data);
 

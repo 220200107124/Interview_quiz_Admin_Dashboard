@@ -13,6 +13,7 @@ function AdminDashboard() {
   //  Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const quizzesPerPage = 3; // adjust as needed
+  const API_URL='https://interview-quiz-admin-dashboard.onrender.com'
 
   useEffect(() => {
     fetchQuizzes();
@@ -20,7 +21,7 @@ function AdminDashboard() {
 
   const fetchQuizzes = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/quizzes');
+      const res = await axios.get(`${API_URL}/api/quizzes`);
       setQuizzes(res.data);
     } catch (err) {
       console.error('Failed to fetch quizzes', err);
@@ -36,7 +37,7 @@ function AdminDashboard() {
   const handleDeleteQuiz = async (id) => {
     if (!window.confirm('Are you sure to delete this quiz?')) return;
     try {
-      await axios.delete(`http://localhost:8080/api/quizzes/${id}`);
+      await axios.delete(`${API_URL}/api/quizzes/${id}`);
       fetchQuizzes();
     } catch (err) {
       console.error('Failed to delete quiz', err);

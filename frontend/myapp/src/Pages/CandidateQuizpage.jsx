@@ -124,13 +124,14 @@ function CandidateQuizpage() {
   const [quiz, setQuiz] = useState(null);           // quiz data
   const [answers, setAnswers] = useState([]);       // user's answers
   const [loading, setLoading] = useState(true);     // loading flag
-  const [error, setError] = useState(null);         // error message
+  const [error, setError] = useState(null);  
+  const API_URL = 'https://interview-quiz-admin-dashboard.onrender.com';        // error message
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // fetch candidate first to get quizId
-        const candidateRes = await fetch(`http://localhost:8080/api/candidates/${candidateId}`);
+        const candidateRes = await fetch(`${API_URL}/api/candidates/${candidateId}`);
         const candidateData = await candidateRes.json();
 
         if (!candidateData.quizId) {
@@ -140,7 +141,7 @@ function CandidateQuizpage() {
         }
 
         // fetch quiz by quizId
-        const quizRes = await fetch(`http://localhost:8080/api/quizzes/${candidateData.quizId}`);
+        const quizRes = await fetch(`${API_URL}/api/quizzes/${candidateData.quizId}`);
         const quizData = await quizRes.json();
 
         setQuiz(quizData);
@@ -170,7 +171,7 @@ function CandidateQuizpage() {
     });
 
     try {
-      await fetch('http://localhost:8080/api/results', {
+      await fetch(`${API_URL}/api/results`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

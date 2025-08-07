@@ -58,7 +58,7 @@ router.post('/send-test/:candidateId', async (req, res) => {
   const candidate = await Candidate.findById(req.params.candidateId);
   if (!candidate) return res.status(404).json({ message: 'Candidate not found' });
 
-  const quizLink = `http://localhost:8080/quiz/${candidate._id}`;
+  const quizLink = `http://localhost:3000/quiz/${candidate._id}`;
 
   // Send email using nodemailer or any service
   // For example:
@@ -66,7 +66,7 @@ router.post('/send-test/:candidateId', async (req, res) => {
   const transporter = nodemailer.createTransport({ /* SMTP config */ });
 
   await transporter.sendMail({
-    from: 'your@email.com',
+    from: 'EMAIL_USER',
     to: candidate.email,
     subject: 'Your quiz link',
     text: `Please take your quiz: ${quizLink}`

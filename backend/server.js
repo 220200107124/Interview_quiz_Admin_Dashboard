@@ -6,11 +6,19 @@ const candidateRoutes = require('./routes/candidateRoutes');
 const AdminCreateQuizs = require('./routes/quizzesRoutes');
 const assignQuizRouter = require('./routes/assignQuiz');
 const resultRoutes = require('./routes/resultRouter');
+const quizByCandidateRouter = require('./routes/quizByCandidate');
+const submitQuizRouter = require('./routes/Submission');
+
+
+
+
+
+
 const Candidate = require('./models/quizzes'); // Adjust path
 const Quiz = require('./models/candidate'); // Adjust path
-const Result = require('./models/result'); // Adjust path
+const Result = require('./models/result'); //
+const Submission=require('./models/Submission');
 
-// const candidateQuizRoutes = require('./routes/candidatequiz');
 
 const app = express();
 app.use(cors());
@@ -22,7 +30,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true
 
 
-  // optional options like useNewUrlParser, useUnifiedTopology
+
 })
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB error:', err));
@@ -64,8 +72,11 @@ app.get('/', async (req, res) => {
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/quizzes', AdminCreateQuizs);
 app.use('/api/assign', assignQuizRouter);
-app.use('/api/results', resultRoutes);
-// app.use('/api/candidate', candidateQuizRoutes);
+app.use('/api/result', resultRoutes);
+app.use('/api/quiz-by-candidate',quizByCandidateRouter);
+app.use('/api/submit-quiz', submitQuizRouter);
+
+
 
 const PORT = process.env.PORT|| 8080;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

@@ -1,13 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AdminCandidatePage.css';
 import AdminSideBar from '../Components/AdminSideBar';
 import Footer from '../Components/Footer';
-
-// Backend base URL
-const API_URL = 'https://interview-quiz-admin-dashboard.onrender.com'; 
-// For local dev: use 'http://localhost:8080'
 
 const SendIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -42,6 +37,8 @@ const AdminCandidatePage = () => {
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [editingCandidate, setEditingCandidate] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const [newCandidate, setNewCandidate] = useState({
     name: '', lname: '', email: '', tech: 'React', difficulty: 'Easy'
   });
@@ -59,8 +56,8 @@ const AdminCandidatePage = () => {
       setLoading(true);
       try {
         const [cRes, qRes] = await Promise.all([
-          axios.get(`${API_URL}/api/candidates`),
-          axios.get(`${API_URL}/api/quizzes`)
+          axios.get(`${process.env.REACT_APP_API_URL}/api/candidates`),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/quizzes`)
         ]);
         setCandidates(cRes.data);
         setQuizzes(qRes.data);
@@ -74,16 +71,18 @@ const AdminCandidatePage = () => {
   }, []);
 
   const handleAddCandidate = async () => {
-    if (!newCandidate.name || !newCandidate.lname || !newCandidate.email) return alert('Please fill all fields');
-    const exists = candidates.some(c =>
-      c.tech.toLowerCase() === newCandidate.tech.toLowerCase() &&
-      c.difficulty.toLowerCase() === newCandidate.difficulty.toLowerCase()
+    if (!newCandidate.name || !newCandidate.lname || !newCandidate.email) {
+      return alert('Please fill all fields');
+    }
+
+    const emailExists = candidates.some(c =>
+      c.email.toLowerCase() === newCandidate.email.toLowerCase()
     );
-    if (exists) return alert('Candidate with this tech and difficulty already exists.');
+    if (emailExists) return alert('Candidate with this email already exists.');
 
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/api/candidates`, newCandidate);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/candidates`, newCandidate);
       setCandidates(prev => [...prev, res.data]);
       setNewCandidate({ name: '', lname: '', email: '', tech: 'React', difficulty: 'Easy' });
     } catch (err) {
@@ -98,7 +97,7 @@ const AdminCandidatePage = () => {
   const handleUpdateCandidate = async () => {
     setLoading(true);
     try {
-      const res = await axios.put(`${API_URL}/api/candidates/${editingCandidate._id}`, editingCandidate);
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/api/candidates/${editingCandidate._id}`, editingCandidate);
       setCandidates(candidates.map(c => c._id === res.data._id ? res.data : c));
       setEditingCandidate(null);
     } catch (err) {
@@ -112,7 +111,7 @@ const AdminCandidatePage = () => {
     if (window.confirm('Are you sure?')) {
       setLoading(true);
       try {
-        await axios.delete(`${API_URL}/api/candidates/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/candidates/${id}`);
         setCandidates(candidates.filter(c => c._id !== id));
       } catch (err) {
         console.error('Delete error:', err);
@@ -130,9 +129,12 @@ const AdminCandidatePage = () => {
     if (!matchingQuiz) return alert(`No quiz found for ${candidate.tech} - ${candidate.difficulty}`);
 
     setSending(true);
+    setIsDisabled(true); // disable button
+
     try {
-      const res = await axios.post(`${API_URL}/api/assign/${candidate._id}`, {
-        quizId: matchingQuiz._id, title: matchingQuiz.title
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}`, {
+        quizId: matchingQuiz._id,
+        title: matchingQuiz.title
       });
       alert(res.data.message);
       setEditingCandidate(null);
@@ -141,6 +143,9 @@ const AdminCandidatePage = () => {
       alert('Failed to assign quiz');
     } finally {
       setSending(false);
+      setTimeout(() => {
+        setIsDisabled(false);
+      }, 2 * 60 * 1000); // ⏱️ re-enable after 2 minutes
     }
   };
 
@@ -148,7 +153,7 @@ const AdminCandidatePage = () => {
     <div>
       <div className="candidate-page">
         <div className='admin-sidebar'>
-          <AdminSideBar/>
+          <AdminSideBar />
         </div>
         <div className="container">
           <h1 className="main-title">Candidate Management</h1>
@@ -221,7 +226,7 @@ const AdminCandidatePage = () => {
                 <div className="modal-actions">
                   {sending ? <div className="loader"></div> : (
                     <>
-                      <button onClick={() => handleSendTest(editingCandidate)}><SendIcon /> Send Test</button>
+                      <button onClick={() => handleSendTest(editingCandidate)} disabled={isDisabled}><SendIcon /> Send Test</button>
                       <button onClick={handleUpdateCandidate}>Save</button>
                       <button onClick={() => setEditingCandidate(null)}>Cancel</button>
                     </>
@@ -231,8 +236,9 @@ const AdminCandidatePage = () => {
             </div>
           )}
         </div>
+        <Footer />
       </div>
-      <Footer />
+      
     </div>
   );
 };

@@ -50,7 +50,7 @@
 
 // export default CandidateModal;
 import './AdminResult.css';
-import './CandidateDetail.css';
+import './CandidateModal.css';
 
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
@@ -91,7 +91,7 @@ function CandidateModal({ candidateName, details, onClose }) {
                 <XAxis dataKey="date" />
                 <YAxis domain={[0, Math.max(10, ...attemptsData.map(a => a.totalQuestions))]} />
                 <Tooltip />
-                <Bar dataKey="score" fill="#43e97b" />
+                <Bar dataKey="score" fill="#28ee6aff" />
               </BarChart>
             </ResponsiveContainer>
           </div>

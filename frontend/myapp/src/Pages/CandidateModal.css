@@ -1,10 +1,10 @@
-    .candidate-detail-page {
+.candidate-detail-page {
   max-width: 800px;
   margin: 40px auto;
   padding: 24px;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', Tahoma, sans-serif;
   color: #1f2937;
 }
@@ -61,6 +61,7 @@ button {
 button:hover {
   background-color: #1e40af;
 }
+
 .modal-buttons {
   margin-top: 15px;
   display: flex;
@@ -68,7 +69,7 @@ button:hover {
   gap: 10px;
 }
 
- .close-btn {
+.close-btn {
   background: #131414;
   color: white;
   border: none;
@@ -77,6 +78,63 @@ button:hover {
   border-radius: 4px;
 }
 
-.back-btn:hover, .close-btn:hover {
+.back-btn:hover,
+.close-btn:hover {
   background: #1d4ed8;
+}
+
+/* 📱 Mobile (≤768px) */
+@media screen and (max-width: 768px) {
+  .candidate-detail-page {
+    padding: 16px;
+    margin: 20px 12px;
+    font-size: 0.95rem;
+  }
+
+  .candidate-detail-page h2 {
+    font-size: 1.5rem;
+  }
+
+  .candidate-detail-page h4 {
+    font-size: 1.1rem;
+  }
+
+  .candidate-detail-page li {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  button,
+  .close-btn,
+  .back-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+  }
+}
+
+/* 💻 Desktop (≥769px) */
+@media screen and (min-width: 769px) {
+  .candidate-detail-page {
+    max-width: 800px;
+    padding: 24px;
+    margin: 40px auto;
+  }
+
+  .modal-buttons {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  button,
+  .close-btn,
+  .back-btn {
+    padding: 8px 16px;
+    font-size: 0.95rem;
+  }
 }

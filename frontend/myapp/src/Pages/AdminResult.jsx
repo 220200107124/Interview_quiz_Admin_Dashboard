@@ -1,8 +1,10 @@
+
 // import { useEffect, useState } from 'react';
 // import './AdminResult.css';
+// import './CandidateModal.css'
 // import AdminSideBar from '../Components/AdminSideBar';
 // import Footer from '../Components/Footer';
-// import CandidateModal from './CandidateModal';  // import modal
+// import CandidateModal from './CandidateModal';
 // import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 // import { useNavigate } from 'react-router-dom';
 
@@ -10,66 +12,93 @@
 //   const [results, setResults] = useState([]);
 //   const [candidateSummary, setCandidateSummary] = useState({});
 //   const [selectedCandidate, setSelectedCandidate] = useState(null);
+//   const [loading, setLoading] = useState(true);
 //   const navigate = useNavigate();
 
 //   const handleDashBoard = () => navigate('/admin');
 
 //   useEffect(() => {
-//     const dummyResults = [
-//       { id: 1, candidateName: 'John Doe', quizTitle: 'React Fundamentals', technology: 'React', score: 8, totalQuestions: 10, date: '2025-07-22' },
-//       { id: 2, candidateName: 'Jane Smith', quizTitle: 'Node Basics', technology: 'Node', score: 6, totalQuestions: 10, date: '2025-07-21' },
-//       { id: 3, candidateName: 'John Doe', quizTitle: 'Node Basics', technology: 'Node', score: 7, totalQuestions: 10, date: '2025-07-23' },
-//       { id: 4, candidateName: 'Jane Smith', quizTitle: 'React Fundamentals', technology: 'React', score: 9, totalQuestions: 10, date: '2025-07-24' }
-//     ];
-//     setResults(dummyResults);
+//     const fetchResults = async () => {
+//       try {
+//         setLoading(true);
+//         const res = await fetch(`${process.env.REACT_APP_API_URL}/api/result`);
+//         const data = await res.json();
+//         setResults(data);
 
-//     // Build candidate summary
-//     const summary = {};
-//     dummyResults.forEach(r => {
-//       if (!summary[r.candidateName]) {
-//         summary[r.candidateName] = { attempts: 0, totalScore: 0, attemptsData: [] };
+//         // Build summary grouped by candidate
+//         const summary = {};
+//         data.forEach(r => {
+//           if (!summary[r.candidateName]) {
+//             summary[r.candidateName] = { attempts: 0, totalScore: 0, attemptsData: [] };
+//           }
+//           summary[r.candidateName].attempts += 1;
+//           summary[r.candidateName].totalScore += r.score;
+//           summary[r.candidateName].attemptsData.push(r);
+//         });
+
+//         // Sort attempts by date descending
+//         Object.keys(summary).forEach(name => {
+//           summary[name].attemptsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+//         });
+
+//         setCandidateSummary(summary);
+//       } catch (error) {
+//         console.error('Error fetching results:', error);
+//       } finally {
+//         setLoading(false);
 //       }
-//       summary[r.candidateName].attempts += 1;
-//       summary[r.candidateName].totalScore += r.score;
-//       summary[r.candidateName].attemptsData.push(r);
-//     });
-//     setCandidateSummary(summary);
+//     };
+
+//     fetchResults();
 //   }, []);
 
+//   // Prepare chart data: average score per candidate
+//   const chartData = Object.keys(candidateSummary).map(name => ({
+//     candidateName: name,
+//     averageScore: candidateSummary[name].totalScore / candidateSummary[name].attempts
+//   }));
+
+//   // Latest attempt per candidate for table
+//   const latestResults = Object.keys(candidateSummary).map(name => candidateSummary[name].attemptsData[0]);
+
 //   return (
-//     <div>
-//       <div className="admin-results-wrapper">
-//         <AdminSideBar />
-//         <main className="results-container">
-//           <h1>Quiz Results</h1>
-//           <button className="back-btn" onClick={handleDashBoard}>← Back to Dashboard</button>
+//     <div className="admin-results-wrapper">
+//       <AdminSideBar />
+//       <main className="results-container">
+//         <h1>Quiz Results</h1>
+//         <button className="back-btn" onClick={handleDashBoard}>← Back to Dashboard</button>
 
-//           <div className="chart-section">
-//             <h3>Scores by Candidate</h3>
-//             <ResponsiveContainer width="100%" height={300}>
-//               <BarChart data={results}>
-//                 <CartesianGrid strokeDasharray="3 3" />
-//                 <XAxis dataKey="candidateName" />
-//                 <YAxis domain={[0, 10]} />
-//                 <Tooltip />
-//                 <Bar dataKey="score" fill="#2563eb" />
-//               </BarChart>
-//             </ResponsiveContainer>
+//         {loading ? (
+//           <p>Loading results...</p>
+//         ) : results.length === 0 ? (
+//           <p>No results available yet.</p>
+//         ) : (
+//           <>
+//             {/* Charts */}
+//             <div className="chart-section">
+//               <h3>Average Scores by Candidate</h3>
+//               <ResponsiveContainer width="100%" height={300}>
+//                 <BarChart data={chartData}>
+//                   <CartesianGrid strokeDasharray="3 3" />
+//                   <XAxis dataKey="candidateName" />
+//                   <YAxis domain={[0, 10]} />
+//                   <Tooltip />
+//                   <Bar dataKey="averageScore" fill="#2563eb" />
+//                 </BarChart>
+//               </ResponsiveContainer>
 
-//             <ResponsiveContainer width="100%" height={300}>
-//               <LineChart data={results}>
-//                 <CartesianGrid strokeDasharray="3 3" />
-//                 <XAxis dataKey="candidateName" />
-//                 <YAxis domain={[0, 10]} />
-//                 <Tooltip />
-//                 <Line type="monotone" dataKey="score" stroke="#4facfe" strokeWidth={3} activeDot={{ r: 6 }} />
-//               </LineChart>
-//             </ResponsiveContainer>
-//           </div>
+//               <ResponsiveContainer width="100%" height={300}>
+//                 <LineChart data={chartData}>
+//                   <CartesianGrid strokeDasharray="3 3" />
+//                   <XAxis dataKey="candidateName" />
+//                   <YAxis domain={[0, 10]} />
+//                   <Tooltip />
+//                   <Line type="monotone" dataKey="averageScore" stroke="#4facfe" strokeWidth={3} activeDot={{ r: 6 }} />
+//                 </LineChart>
+//               </ResponsiveContainer>
+//             </div>
 
-//           {results.length ===0? (
-//             <p>No results available yet.</p>
-//           ) : (
+//             {/* Table */}
 //             <div className="table-wrapper">
 //               <table>
 //                 <thead>
@@ -83,13 +112,13 @@
 //                   </tr>
 //                 </thead>
 //                 <tbody>
-//                   {results.map((r, idx) => (
-//                     <tr key={`${r.id}-${idx}`}>
+//                   {latestResults.map((r, idx) => (
+//                     <tr key={`${r._id}-${idx}`}>
 //                       <td>{r.candidateName}</td>
 //                       <td>{r.quizTitle}</td>
 //                       <td>{r.technology}</td>
 //                       <td>{r.score} / {r.totalQuestions}</td>
-//                       <td>{r.date}</td>
+//                       <td>{new Date(r.date).toLocaleString()}</td>
 //                       <td>
 //                         <button className="view-btn" onClick={() => setSelectedCandidate(r.candidateName)}>
 //                           View Detail
@@ -100,12 +129,13 @@
 //                 </tbody>
 //               </table>
 //             </div>
-//           )}
-//            <Footer/>
-//         </main>
-//       </div>
+//           </>
+//         )}
 
-//       {/* Modal */}
+//         <Footer />
+//       </main>
+
+//       {/* Candidate Modal */}
 //       {selectedCandidate && candidateSummary[selectedCandidate] && (
 //         <CandidateModal
 //           candidateName={selectedCandidate}
@@ -113,7 +143,6 @@
 //           onClose={() => setSelectedCandidate(null)}
 //         />
 //       )}
-     
 //     </div>
 //   );
 // }
@@ -124,7 +153,7 @@ import './AdminResult.css';
 import AdminSideBar from '../Components/AdminSideBar';
 import Footer from '../Components/Footer';
 import CandidateModal from './CandidateModal';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 
 function AdminResult() {
@@ -135,17 +164,15 @@ function AdminResult() {
   const navigate = useNavigate();
 
   const handleDashBoard = () => navigate('/admin');
-  const API_URL= 'https://interview-quiz-admin-dashboard.onrender.com'; 
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_URL}/api/results`);  // adjust your backend endpoint
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/result`);
         const data = await res.json();
         setResults(data);
 
-        // Build summary dynamically
         const summary = {};
         data.forEach(r => {
           if (!summary[r.candidateName]) {
@@ -155,6 +182,11 @@ function AdminResult() {
           summary[r.candidateName].totalScore += r.score;
           summary[r.candidateName].attemptsData.push(r);
         });
+
+        Object.keys(summary).forEach(name => {
+          summary[name].attemptsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        });
+
         setCandidateSummary(summary);
       } catch (error) {
         console.error('Error fetching results:', error);
@@ -166,80 +198,90 @@ function AdminResult() {
     fetchResults();
   }, []);
 
+  const chartData = Object.keys(candidateSummary).map(name => ({
+    candidateName: name,
+    averageScore: candidateSummary[name].totalScore / candidateSummary[name].attempts,
+    fill: candidateSummary[name].totalScore > 50 ? '#82ca9d' : '#8884d8',
+  }));
+
+  const latestResults = Object.keys(candidateSummary).map(name => candidateSummary[name].attemptsData[0]);
+
   return (
-    <div>
-      <div className="admin-results-wrapper">
-        <AdminSideBar />
-        <main className="results-container">
-          <h1>Quiz Results</h1>
-          <button className="back-btn" onClick={handleDashBoard}>← Back to Dashboard</button>
+    <div className="admin-results-wrapper">
+      <AdminSideBar />
+      <main className="results-container">
+        <h1>Quiz Results</h1>
+        <button className="back-btn" onClick={handleDashBoard}>← Back to Dashboard</button>
 
-          {loading ? (
-            <p>Loading results...</p>
-          ) : results.length === 0 ? (
-            <p>No results available yet.</p>
-          ) : (
-            <>
-              <div className="chart-section">
-                <h3>Scores by Candidate</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={results}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="candidateName" />
-                    <YAxis domain={[0, 10]} />
-                    <Tooltip />
-                    <Bar dataKey="score" fill="#2563eb" />
-                  </BarChart>
-                </ResponsiveContainer>
-
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={results}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="candidateName" />
-                    <YAxis domain={[0, 10]} />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="score" stroke="#4facfe" strokeWidth={3} activeDot={{ r: 6 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="table-wrapper">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Candidate</th>
-                      <th>Quiz</th>
-                      <th>Technology</th>
-                      <th>Score</th>
-                      <th>Date</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {results.map((r, idx) => (
-                      <tr key={`${r._id || r.id}-${idx}`}>
-                        <td>{r.candidateName}</td>
-                        <td>{r.quizTitle}</td>
-                        <td>{r.technology}</td>
-                        <td>{r.score} / {r.totalQuestions}</td>
-                        <td>{r.date}</td>
-                        <td>
-                          <button className="view-btn" onClick={() => setSelectedCandidate(r.candidateName)}>
-                            View Detail
-                          </button>
-                        </td>
-                      </tr>
+        {loading ? (
+          <p>Loading results...</p>
+        ) : results.length === 0 ? (
+          <p>No results available yet.</p>
+        ) : (
+          <>
+            <div className="chart-section">
+              <h3>Average Scores by Candidate</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="candidateName" />
+                  <YAxis domain={[0, 10]} />
+                  <Tooltip />
+                  <Bar dataKey="averageScore">
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
-          <Footer />
-        </main>
-      </div>
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
 
-      {/* Modal */}
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="candidateName" />
+                  <YAxis domain={[0, 10]} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="averageScore" stroke="#4facfe" strokeWidth={3} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Candidate</th>
+                    <th>Quiz</th>
+                    <th>Technology</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {latestResults.map((r, idx) => (
+                    <tr key={`${r._id}-${idx}`}>
+                      <td>{r.candidateName}</td>
+                      <td>{r.quizTitle}</td>
+                      <td>{r.technology}</td>
+                      <td>{r.score} / {r.totalQuestions}</td>
+                      <td>{new Date(r.date).toLocaleString()}</td>
+                      <td>
+                        <button className="view-btn" onClick={() => setSelectedCandidate(r.candidateName)}>
+                          View Detail
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+
+        <Footer />
+      </main>
+
       {selectedCandidate && candidateSummary[selectedCandidate] && (
         <CandidateModal
           candidateName={selectedCandidate}
@@ -252,3 +294,4 @@ function AdminResult() {
 }
 
 export default AdminResult;
+

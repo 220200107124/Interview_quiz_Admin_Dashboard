@@ -7,7 +7,7 @@ import CandidateQuizpage from './Pages/CandidateQuizpage';
 import ThankYouPage from './Pages/ThankYouPage';
 import AdminCandidatePage from './Pages/AdminCandidatePage';
 import AdminResult from './Pages/AdminResult';
-import TestCandidatePage from './Pages/TestCandidatePage';
+// import TestCandidatePage from './Pages/TestCandidatePage';
 // import CandidateDetail from './Pages/CandidateDetail';
 // import CandidateQuizpage from './Pages/CandidateQuizpage';
 

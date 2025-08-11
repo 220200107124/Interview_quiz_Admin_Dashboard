@@ -1,18 +1,18 @@
-import './AdminLogin.css';
+import "./AdminLogin.css";
 import { useState } from "react";
 
 function AdminLogin({ onLogin }) {
   // const [role, setRole] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === 'admin123' && email=== 'admin123@gmail.com') {
+    if (password === "admin123" && email === "admin123@gmail.com") {
       onLogin();
     } else {
-      setError('Invalid Email or Password');
+      setError("Invalid Email or Password");
     }
   };
 
@@ -20,11 +20,24 @@ function AdminLogin({ onLogin }) {
     <div className="admin-login-container">
       <div className="admin-login-box">
         <div className="admin-login-header">
-          <svg className="shield-icon" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M12 3L4 6v6c0 5.25 3.75 10.125 8 11 4.25-.875 8-5.75 8-11V6l-8-3z" />
+          <svg
+            className="shield-icon"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 3L4 6v6c0 5.25 3.75 10.125 8 11 4.25-.875 8-5.75 8-11V6l-8-3z"
+            />
           </svg>
-          <h2> Questify  <br />Admin Access</h2>
+          <h2>
+            {" "}
+            Questify <br />
+            Admin Access
+          </h2>
           <p>Please authenticate to access the admin panel</p>
         </div>
 
@@ -36,21 +49,20 @@ function AdminLogin({ onLogin }) {
             <option value="Candidate">Candidate</option>
           </select> */}
 
-         
           <label>Email</label>
           <input
             type="email"
             placeholder="Enter your Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
-           <label>Password</label>
+          <label>Password</label>
           <input
             type="password"
             placeholder="Enter your password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
 
@@ -60,8 +72,10 @@ function AdminLogin({ onLogin }) {
         </form>
 
         <div className="demo-info">
-          Demo Access:<br />
-          Email: admin123@gmail.com<br />
+          Demo Access:
+          <br />
+          Email: admin123@gmail.com
+          <br />
           Password: admin123
         </div>
       </div>

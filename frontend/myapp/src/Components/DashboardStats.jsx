@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import './DashboardStats.css';
-
+import axios from "axios";
+import "./DashboardStats.css";
 
 const DashboardStats = () => {
   const [stats, setStats] = useState({
@@ -9,20 +9,26 @@ const DashboardStats = () => {
     activeQuizzes: 0,
   });
 
-  // Simulate fetching data from API
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    // Replace this with actual API call
     const fetchStats = async () => {
-      const data = {
-        totalQuizzes: 12,
-        totalCandidates: 50,
-        activeQuizzes: 3,
-      };
-      setStats(data);
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/state`); 
+        setStats(res.data);
+      } catch (err) {
+        console.error("Error fetching stats:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchStats();
   }, []);
+
+  if (loading) {
+    return <div className="container"><p>Loading stats...</p></div>;
+  }
 
   return (
     <div className="container">

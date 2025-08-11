@@ -1,53 +1,54 @@
-
-/* 
+/* Base styles */
 * {
   box-sizing: border-box;
+}
 
-} */
-
-
-/* .dashboard-wrapper {
+.dashboard-wrapper {
   display: flex;
   min-height: 100vh;
-  
-  
-  
-} */
-
-
+  flex-direction: row; /* Keep horizontal layout even on mobile */
+}
 
 .dashboard-container {
-  padding: auto;
+  padding: 16px;
   color: #2563eb;
   flex: 1;
-  /* background-color: #040404; */
-  
+  width: 0; /* Prevent flex item from growing beyond container */
+  overflow-x: auto; /* Handle horizontal scroll if needed */
 }
 
 .dashboard-header {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 25px;
- 
+  gap: 8px;
+  margin-bottom: 20px;
+  margin-top: 10px; /* Add top margin to clear toggle menu */
+  position: relative;
+  z-index: 1; /* Ensure header stays above other elements */
 }
 
 .dashboard-header h1 {
-  font-size: 20px;
+  font-size: 18px; /* Smaller on mobile */
   color: #2563eb;
-  margin-right: 30px;
+  margin: 0;
+  padding-left: 10px; /* Add left padding to avoid toggle overlap */
 }
 
 .header-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-left: 10px; /* Add left padding to avoid toggle overlap */
 }
 
 .header-buttons button {
-  padding: 6px 12px;
+  padding: 6px 12px; /* Smaller padding on mobile */
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 12px; /* Smaller font on mobile */
+  flex: 1; /* Buttons take equal width on mobile */
+  min-width: 80px;
 }
 
 .creates-btn {
@@ -63,34 +64,37 @@
 .stats-cards {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 25px;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
 .card {
   background-color: #f3f4f6;
   border-radius: 6px;
-  padding: 12px;
+  padding: 10px;
   text-align: center;
 }
 
 .card p {
-  font-size: 12px;
+  font-size: 11px;
   color: #2563eb;
+  margin: 0;
 }
 
 .card strong {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .quiz-list {
   background: #fff;
   border-radius: 6px;
-  padding: 16px;
+  padding: 12px;
+  overflow-x: auto; /* Handle horizontal scroll for table */
 }
 
 .quiz-list h2 {
   margin-bottom: 4px;
+  font-size: 16px;
 }
 
 .subtitle {
@@ -99,16 +103,94 @@
   margin-bottom: 12px;
 }
 
+/* Mobile table styles - Card-based layout */
+@media (max-width: 767px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  tbody tr {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  tbody td {
+    border: none;
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  tbody td:last-child {
+    border-bottom: none;
+  }
+  
+  tbody td:before {
+    content: attr(data-label) ": ";
+    font-weight: bold;
+    color: #2563eb;
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+  
+  /* For quiz table */
+  tbody td:nth-child(1):not([data-label]):before { content: "Title: "; }
+  tbody td:nth-child(2):not([data-label]):before { content: "Category: "; }
+  tbody td:nth-child(3):not([data-label]):before { content: "Difficulty: "; }
+  tbody td:nth-child(4):not([data-label]):before { content: "Questions: "; }
+  tbody td:nth-child(5):not([data-label]):before { content: "Actions: "; }
+  
+  /* For candidate table - 6 columns */
+  tbody tr:has(td:nth-child(6)) td:nth-child(1):not([data-label]):before { content: "First Name: "; }
+  tbody tr:has(td:nth-child(6)) td:nth-child(2):not([data-label]):before { content: "Last Name: "; }
+  tbody tr:has(td:nth-child(6)) td:nth-child(3):not([data-label]):before { content: "Email: "; }
+  tbody tr:has(td:nth-child(6)) td:nth-child(4):not([data-label]):before { content: "Tech: "; }
+  tbody tr:has(td:nth-child(6)) td:nth-child(5):not([data-label]):before { content: "Difficulty: "; }
+  tbody tr:has(td:nth-child(6)) td:nth-child(6):not([data-label]):before { content: "Actions: "; }
+  
+  tbody td:last-child {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  tbody td:last-child button {
+    flex: 1;
+    max-width: 80px;
+  }
+}
+
+/* Default table styles for mobile */
 table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 11px;
 }
 
 th,
 td {
-  padding: 8px;
+  padding: 6px 4px;
   text-align: left;
-  font-size: 13px;
+  font-size: 11px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+th {
+  font-weight: 600;
+  background-color: #f8f9fa;
 }
 
 tr:nth-child(even) {
@@ -119,11 +201,53 @@ tr:nth-child(even) {
 .results-btn,
 .deletes-btn {
   font-size: 12px;
-  padding: 4px 8px;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   margin-right: 4px;
+  margin-bottom: 4px;
   cursor: pointer;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Icon buttons for actions */
+button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Mobile action buttons */
+@media (max-width: 767px) {
+  .manage-btn,
+  .results-btn,
+  .deletes-btn {
+    display: block;
+    width: 100%;
+    margin: 3px 0;
+    text-align: center;
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  
+  /* Icon buttons on mobile */
+  tbody td:last-child button {
+    padding: 8px;
+    min-width: 40px;
+    border-radius: 4px;
+    background: #f3f4f6;
+    border: 1px solid #ddd;
+  }
+  
+  tbody td:last-child button:first-child {
+    background: #2563eb;
+    color: white;
+  }
+  
+  tbody td:last-child button:last-child {
+    background: #dc2626;
+    color: white;
+  }
 }
 
 .manage-btn {
@@ -139,35 +263,158 @@ tr:nth-child(even) {
 .deletes-btn {
   background: #7f1d1d;
   color: #fff;
-} 
+}
 
-/* Larger Screens */
-@media(min-width: 768px) {
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
 
+.pagination-btn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #090909;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-  .dashboard-wrapper {
-    flex-direction: row;
-  }
+.pagination-btn:hover:not(:disabled) {
+  background:  #2563eb;
+}
 
+.pagination-btn.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
 
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
+/* Tablet styles */
+@media (min-width: 768px) {
   .dashboard-container {
-    flex: 1;
-    padding: 32px;
-    margin-left: 0;
-    
+    padding: 20px;
   }
 
   .dashboard-header {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
+    margin-bottom: 25px;
+    margin-top: 0; /* Remove top margin on larger screens */
+  }
+
+  .dashboard-header h1 {
+    font-size: 22px;
+    padding-left: 0; /* Remove left padding on larger screens */
+  }
+
+  .header-buttons {
+    padding-left: 0; /* Remove left padding on larger screens */
+  }
+
+  .header-buttons button {
+    padding: 8px 16px;
+    font-size: 14px;
+    flex: none; /* Remove equal width on tablet+ */
   }
 
   .stats-cards {
     flex-direction: row;
-    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 25px;
+  }
+
+  .card {
+    flex: 1;
+    padding: 16px;
+  }
+
+  .card p {
+    font-size: 12px;
+  }
+
+  .card strong {
+    font-size: 18px;
+  }
+
+  .quiz-list {
+    padding: 16px;
+  }
+
+  .quiz-list h2 {
+    font-size: 18px;
+  }
+
+  /* Reset table styles for larger screens */
+  table {
+    display: table;
+    font-size: 13px;
+  }
+  
+  thead {
+    display: table-header-group;
+  }
+  
+  tbody {
+    display: table-row-group;
+  }
+  
+  tr {
+    display: table-row;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  
+  th, td {
+    display: table-cell;
+    padding: 8px;
+    border-right: none;
+    min-width: auto;
+  }
+
+  .manage-btn,
+  .results-btn,
+  .deletes-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+    margin-right: 4px;
+    display: inline-block;
+    width: auto;
   }
 }
 
+/* Desktop style*/
+@media (min-width: 1024px) {
+  .dashboard-container {
+    padding: 32px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 28px;
+  }
+
+  .header-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .stats-cards {
+    gap: 20px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}

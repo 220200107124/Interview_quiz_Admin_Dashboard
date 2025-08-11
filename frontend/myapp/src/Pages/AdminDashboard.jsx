@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import AdminSideBar from '../Components/AdminSideBar';
-import DashboardStats from '../Components/DashboardStats';
-import Footer from '../Components/Footer';
-import './AdminDashboard.css';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+// import AdminSideBar from "../Components/AdminSideBar";
+// import DashboardStats from "../Components/DashboardStats";
+// import Footer from "../Components/Footer";
+import "./AdminDashboard.css";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -20,26 +20,28 @@ function AdminDashboard() {
 
   const fetchQuizzes = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/quizzes`);
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/quizzes`
+      );
       setQuizzes(res.data);
     } catch (err) {
-      console.error('Failed to fetch quizzes', err);
+      console.error("Failed to fetch quizzes", err);
     }
   };
 
-  const handleCreateQuiz = () => navigate('/create-quiz');
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/admin-login');
-  };
+  // const handleCreateQuiz = () => navigate("/create-quiz");
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   navigate("/admin-login");
+  // };
 
   const handleDeleteQuiz = async (id) => {
-    if (!window.confirm('Are you sure to delete this quiz?')) return;
+    if (!window.confirm("Are you sure to delete this quiz?")) return;
     try {
       await axios.delete(`${process.env.REACT_APP_API_URL}/api/quizzes/${id}`);
       fetchQuizzes();
     } catch (err) {
-      console.error('Failed to delete quiz', err);
+      console.error("Failed to delete quiz", err);
     }
   };
 
@@ -53,89 +55,105 @@ function AdminDashboard() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="dashboard-wrapper">
-      <AdminSideBar />
-      <main className="dashboard-container">
-        <header className="dashboard-header">
+      
+      <div>
+        {/* <header className="dashboard-header">
           <h1>Admin Dashboard</h1>
           <div className="header-buttons">
-            <button className="creates-btn" onClick={handleCreateQuiz}>+ Create Quiz</button>
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            <button className="creates-btn" onClick={handleCreateQuiz}>
+              + Create Quiz
+            </button>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
-        </header>
+        </header> */}
 
-        <div className="stats-cards">
+        {/* <div className="stats-cards">
           <DashboardStats />
-        </div>
+        </div> */}
 
         <div className="quiz-list">
           <h2>Your Quizzes</h2>
           {quizzes.length === 0 ? (
             <p>No quizzes found.</p>
           ) : (
-            <>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Difficulty</th>
-                    <th>Questions</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentQuizzes.map((quiz) => (
-                    <tr key={quiz._id}>
-                      <td>{quiz.title}</td>
-                      <td>{quiz.category}</td>
-                      <td>{quiz.difficulty}</td>
-                      <td>{quiz.questions.length}</td>
-                      <td>
-                        <button className="manage-btn" onClick={() => navigate('/create-quiz', { state: { quiz } })}>Manage</button>
-                        <button className="deletes-btn" onClick={() => handleDeleteQuiz(quiz._id)}>Delete</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <><table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Category</th>
+      <th>Difficulty</th>
+      <th>Questions</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {currentQuizzes.map((quiz) => (
+      <tr key={quiz._id}>
+        <td data-label="Title">{quiz.title}</td>
+        <td data-label="Category">{quiz.category}</td>
+        <td data-label="Difficulty">{quiz.difficulty}</td>
+        <td data-label="Questions">{quiz.questions.length}</td>
+        <td data-label="Actions">
+          <button
+            className="manage-btn"
+            onClick={() =>
+              navigate("/create-quiz", { state: { quiz } })
+            }
+          >
+            Manage
+          </button>
+          <button
+            className="deletes-btn"
+            onClick={() => handleDeleteQuiz(quiz._id)}
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
               {/*  Pagination buttons */}
-          {/*  Pagination buttons with Prev / Next */}
-<div className="pagination">
-  <button
-    onClick={() => paginate(currentPage - 1)}
-    disabled={currentPage === 1}
-    className="pagination-btn"
-  >
-    Prev
-  </button>
+              {/*  Pagination buttons with Prev / Next */}
+              <div className="pagination">
+                <button
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="pagination-btn"
+                >
+                  Prev
+                </button>
 
-  {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((number) => (
-    <button
-      key={number}
-      onClick={() => paginate(number)}
-      className={`pagination-btn ${currentPage === number ? 'active' : ''}`}
-    >
-      {number}
-    </button>
-  ))}
+                {Array.from({ length: totalPages }, (_, idx) => idx + 1).map(
+                  (number) => (
+                    <button
+                      key={number}
+                      onClick={() => paginate(number)}
+                      className={`pagination-btn ${
+                        currentPage === number ? "active" : ""
+                      }`}
+                    >
+                      {number}
+                    </button>
+                  )
+                )}
 
-      <button
-        onClick={() => paginate(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="pagination-btn"
-      >
-    Next
-  </button>
-</div>
-
- </>
-)}
-</div>
-<Footer />
-      </main>
-    </div>
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="pagination-btn"
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+        
+      </div>
   );
 }
 

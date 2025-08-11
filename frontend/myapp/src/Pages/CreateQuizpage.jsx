@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './CreateQuiz.css';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import AdminSideBar from '../Components/AdminSideBar';
 import {quizAPI}from '../Services/api';
 
@@ -67,7 +67,8 @@ const CreateQuizpage = () => {
   const [showQuizEditor, setShowQuizEditor] = useState(false);
   const [currentQuiz, setCurrentQuiz] = useState(null);
   const [saving, setSaving] = useState(false);
-  const navigate = useNavigate();
+
+  // const navigate = useNavigate();
   const[currentPage ,setCurrentPage]=useState(1);
   const pageSize=4;
   const categories = ['all', 'General', 'React', 'JavaScript', 'Node', 'Graphic', 'NextJs'];
@@ -76,51 +77,9 @@ const CreateQuizpage = () => {
   // Fetch quizzes from API
   useEffect(() => {
     fetchQuizzes();
+    console.log("fetching quizzes");
   }, []);
 
-  // const fetchQuizzes = async () => {
-  //   try {
-  //     setLoading(true);
-  //     setError(null);
-  //     const response = await quizAPI.getQuizzes();
-  //     setQuizzes(response.data || []);
-  //   } catch (err) {
-  //     setError(err.message);
-  //     console.error('Error fetching quizzes:', err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-  
-
-//   const fetchQuizzes = async () => {
-//   try {
-//     setLoading(true);
-//     const response = await quizAPI.getQuizzes();
-//     console.log('Fetched quizzes:', response.data);
-//     setQuizzes(response.data || []);
-//   } catch (err) {
-//     console.error('Error fetching quizzes:', err);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-// const fetchQuizzes = async () => {
-//   try {
-//     setLoading(true);
-//     const response = await quizAPI.getQuizzes();
-//     console.log('Response:', response);
-//     console.log('Fetched quizzes:', response.data);
-//     setQuizzes(response.data || []);
-//   } catch (err) {
-//     console.error('Error fetching quizzes:', err);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-
-//paginatestion logic
 
 
 
@@ -165,7 +124,7 @@ const totalPages=Math.ceil(filteredQuizzes.length/pageSize);
         {
           question: 'Sample question?',
           options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-          correctAnswer: 0
+          correctAnswer: 1
         }
       ]
     };        
@@ -176,6 +135,7 @@ const totalPages=Math.ceil(filteredQuizzes.length/pageSize);
   // Handle edit quiz
   const handleEditQuiz = (quiz) => {
     setCurrentQuiz({ ...quiz });
+    console.log("editing quiz:",quiz);
     setShowQuizEditor(true);
   };
 
@@ -192,39 +152,13 @@ const totalPages=Math.ceil(filteredQuizzes.length/pageSize);
     }
   };
 
-  // Handle save quiz
-//  const handleSaveQuiz = async (updatedQuiz) => {
-//   try {
-//     setSaving(true);
-    
-//     if (updatedQuiz._id) {
-//       // Update existing quiz
-//       const response = await quizAPI.updateQuiz(updatedQuiz._id, updatedQuiz);
-//       setQuizzes(quizzes.map(quiz => 
-//         quiz._id === updatedQuiz._id ? response : quiz
-//       ));
-//       alert('Quiz updated successfully!');
-//     } else {
-//       // Create new quiz
-//       const response = await quizAPI.createQuiz(updatedQuiz);
-//       setQuizzes([response, ...quizzes]);
-//       alert('Quiz created successfully!');
-//     }
-    
-//     setShowQuizEditor(false);
-//     setCurrentQuiz(null);
-//   } catch (err) {
-//     alert('Error saving quiz: ' + err.message);
-//   } finally {
-//     setSaving(false);
-//   }
-// };
 const handleSaveQuiz = async (updatedQuiz) => {
   try {
     setSaving(true);
     if (updatedQuiz._id) {
       const response = await quizAPI.updateQuiz(updatedQuiz._id, updatedQuiz);
       setQuizzes(quizzes.map(quiz => quiz._id === updatedQuiz._id ? response : quiz));
+      console.log("quiz upadated",setQuizzes);
       alert('Quiz updated successfully!');
     } else {
       await quizAPI.createQuiz(updatedQuiz);
@@ -248,6 +182,7 @@ const handleSaveQuiz = async (updatedQuiz) => {
 
     const updateQuiz = (field, value) => {
       setEditedQuiz({ ...editedQuiz, [field]: value });
+      console.log("updating quiz",editedQuiz)
     };
 
     const updateQuestion = (questionIndex, field, value) => {
@@ -521,12 +456,12 @@ const handleSaveQuiz = async (updatedQuiz) => {
           {/* Header */}
           <div className="header-section">
             <div className="header-content">
-              <button 
+              {/* <button 
                 onClick={() => navigate('/admin')} 
                 className="back-btn"
               >
                 ← Back to Dashboard
-              </button>
+              </button> */}
               <h1 className="main-title">Quiz Management</h1>
               <button 
                 onClick={handleCreateNewQuiz} 

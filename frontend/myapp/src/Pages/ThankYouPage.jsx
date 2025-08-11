@@ -1,4 +1,4 @@
-import './CandidateQuizpage.css';
+import "./CandidateQuizpage.css";
 
 function ThankYouPage() {
   return (

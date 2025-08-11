@@ -9,8 +9,8 @@
   padding: 20px;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.08);
-  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  font-family: "Poppins", sans-serif;
 }
 
 .candidate-quiz-container h1 {
@@ -82,7 +82,7 @@
 }
 
 .question-block input[type="radio"]:checked::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 4px;
   left: 4px;
@@ -91,7 +91,6 @@
   background: #fff;
   border-radius: 50%;
 }
-
 
 .submit-btn {
   background: linear-gradient(90deg, #4f46e5, #2563e2);

@@ -1,56 +1,9 @@
-// import './AdminResult.css'; // or separate css if you prefer
-// import './CandidateDetail.css';
 
-// import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-
-// function CandidateModal({ candidateName, details, onClose }) {
-//   return (
-//     <div className="modal-overlay">
-//       <div className="modal">
-//         <h2>Details for {candidateName}</h2>
-//         <p><strong>Total Attempts:</strong> {details.attempts}</p>
-//         <p><strong>Total Score:</strong> {details.totalScore}</p>
-//         <p><strong>Average Score:</strong> {(details.totalScore / details.attempts).toFixed(2)}</p>
-
-//         <h4>All Attempts:</h4>
-//         <ul>
-//           {details?.attemptsData?.length > 0 ? details.attemptsData.map((attempt, idx) => (
-//             <li key={idx}>
-//               Quiz: <strong>{attempt.quizTitle}</strong> | Score: {attempt.score}/{attempt.totalQuestions} | Date: {attempt.date}
-//             </li>
-//           )) : <li>No attempts found</li>}
-//         </ul>
-
-//         {details?.attemptsData?.length > 0 && (
-//           <div className="chart-wrapper">
-//             <h4>Attempt Scores Chart</h4>
-//             <ResponsiveContainer width="100%" height={250}>
-//               <BarChart data={details.attemptsData}>
-//                 <CartesianGrid strokeDasharray="3 3" />
-//                 <XAxis dataKey="date" />
-//                 <YAxis domain={[
-//                   0,
-//                   Math.max(10, ...details.attemptsData.map(a => a.totalQuestions))
-//                 ]} />
-//                 <Tooltip />
-//                 <Bar dataKey="score" fill=" #43e97b" />
-//               </BarChart>
-//             </ResponsiveContainer>
-//           </div>
-//         )}
-
-//         <div className="modal-buttons">
-//           <button className="back-btn" onClick={onClose}>← Back</button>
-//           <button className="close-btn" onClick={onClose}>Close</button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default CandidateModal;
 // import "./AdminResult.css";
 // import "./CandidateModal.css";
+// import { useEffect,useState } from "react";
+// // import axios from "axios";
+
 
 // import {
 //   ResponsiveContainer,
@@ -62,8 +15,35 @@
 //   CartesianGrid,
 // } from "recharts";
 
-// function CandidateModal({ candidateName, details, onClose }) {
-//   const attemptsData = details?.attemptsData || [];
+
+
+// //candidate modal component to show candidate details
+// //this compponent is used in adminresult to show per candidate details
+// function CandidateModal({ candidateId,candidateName, onClose }) {
+ 
+//   const [details,setDetails]=useState(null);
+//    const attemptsData = details?.attemptsData || [];
+//   useEffect(()=>{
+//     async function fetchCandidateDetails(){
+//       try{
+//         const res = await fetch(`${process.env.REACT_APP_API_URL}/api/submit-quiz`);
+//          if(!res.ok) throw new Error("Failed to fetch candidate details");
+//          const data =await res.json();
+//          setDetails(data);
+//       }
+//       catch(err){
+//         console.error("Error fetching candidate data",err);
+//         setDetails({error:"unable to load data"});
+        
+//       }
+      
+      
+//     }
+//     if(candidateId){
+//       fetchCandidateDetails();
+//     }
+
+//   },[candidateId]);
 
 //   return (
 //     <div className="modal-overlay">
@@ -131,9 +111,9 @@
 // }
 
 // export default CandidateModal;
-import { useEffect, useState } from "react";
 import "./AdminResult.css";
 import "./CandidateModal.css";
+import { useEffect, useState } from "react";
 
 import {
   ResponsiveContainer,
@@ -147,21 +127,25 @@ import {
 
 function CandidateModal({ candidateId, candidateName, onClose }) {
   const [details, setDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const attemptsData = details?.attemptsData || [];
 
   useEffect(() => {
     async function fetchCandidateDetails() {
       try {
-        setLoading(true);
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/result`);// your API endpoint
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/result`
+        );
         if (!res.ok) throw new Error("Failed to fetch candidate details");
         const data = await res.json();
         setDetails(data);
       } catch (err) {
-        console.error("Error fetching candidate data:", err);
-        setDetails({ error: "Unable to load data" });
-      } finally {
-        setLoading(false);
+        console.error("Error fetching candidate data", err);
+        setDetails({
+          error: "unable to load data",
+          attempts: 0,
+          totalScore: 0,
+          attemptsData: [],
+        });
       }
     }
 
@@ -170,43 +154,20 @@ function CandidateModal({ candidateId, candidateName, onClose }) {
     }
   }, [candidateId]);
 
-  if (loading) {
-    return (
-      <div className="modal-overlay">
-        <div className="modal">
-          <p>Loading candidate details...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!details || details.error) {
-    return (
-      <div className="modal-overlay">
-        <div className="modal">
-          <p>{details?.error || "No details found for this candidate."}</p>
-          <button onClick={onClose}>Close</button>
-        </div>
-      </div>
-    );
-  }
-
-  const attemptsData = details.attemptsData || [];
-
   return (
     <div className="modal-overlay">
       <div className="modal">
         <h2>Details for {candidateName}</h2>
 
         <p>
-          <strong>Total Attempts:</strong> {details.attempts}
+          <strong>Total Attempts:</strong> {details?.attempts ?? 0}
         </p>
         <p>
-          <strong>Total Score:</strong> {details.totalScore}
+          <strong>Total Score:</strong> {details?.totalScore ?? 0}
         </p>
         <p>
           <strong>Average Score:</strong>{" "}
-          {details.attempts > 0
+          {details?.attempts > 0
             ? (details.totalScore / details.attempts).toFixed(1)
             : "0"}
         </p>
@@ -217,7 +178,8 @@ function CandidateModal({ candidateId, candidateName, onClose }) {
             {attemptsData.map((attempt, idx) => (
               <li key={idx}>
                 Quiz: <strong>{attempt.quizTitle}</strong> | Score:{" "}
-                {attempt.score}/{attempt.totalQuestions} | Date: {attempt.date}
+                {attempt.score}/{attempt.totalQuestions} | Date:{" "}
+                {new Date(attempt.date).toLocaleDateString()}
               </li>
             ))}
           </ul>
@@ -225,7 +187,7 @@ function CandidateModal({ candidateId, candidateName, onClose }) {
           <p>No attempts found.</p>
         )}
 
-        {attemptsData.length > 0 && (
+        {attemptsData.length > -1 && (
           <div className="chart-wrapper">
             <h4>Attempt Scores Chart</h4>
             <ResponsiveContainer width="100%" height={250}>
@@ -259,3 +221,5 @@ function CandidateModal({ candidateId, candidateName, onClose }) {
 }
 
 export default CandidateModal;
+
+

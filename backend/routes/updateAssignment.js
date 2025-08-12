@@ -1,34 +1,28 @@
+// 
+
+// routes/assign.js (CommonJS)
 const express = require('express');
-const router = express.Router();
 const crypto = require('crypto');
 const Assignment = require('../models/Assignment');
+const router = express.Router();
 
-// PATCH: Update token for an existing assignment
 router.patch('/:candidateId/:quizId', async (req, res) => {
+  console.log('PATCH /api/assign/:candidateId/:quizId called', req.params);
   try {
     const { candidateId, quizId } = req.params;
-
     const assignment = await Assignment.findOne({ candidateId, quizId });
+    if (!assignment) return res.status(404).json({ error: 'Assignment not found' });
 
-    if (!assignment) {
-      return res.status(404).json({ error: 'Assignment not found' });
-    }
-
-    // Generate and update token
-    const token = crypto.randomBytes(16).toString('hex');
-    assignment.token = token;
-    assignment.status = 'pending'; // optional: reset status
-    assignment.assignedAt = new Date(); // optional: track when reassigned
+    const newToken = crypto.randomBytes(16).toString('hex');
+    assignment.token = newToken;
+    assignment.status = 'pending';
+    assignment.assignedAt = new Date();
     await assignment.save();
 
-    res.status(200).json({
-      message: 'Token updated successfully',
-      token,
-      reassigned: true
-    });
-
+    console.log('PATCH succeeded for', candidateId, quizId);
+    res.status(200).json({ message: 'Quiz reassigned', token: newToken });
   } catch (err) {
-    console.error(err);
+    console.error('PATCH error', err);
     res.status(500).json({ error: 'Server error' });
   }
 });

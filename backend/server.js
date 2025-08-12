@@ -36,36 +36,40 @@ mongoose
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB error:", err));
-// app.get("/", async (req, res) => {
-//   try {
-//     const candidates = await Candidate.find().limit(5); // just showing top 5
-//     const quizzes = await Quiz.find().limit(5);
-//     const results = await Result.find().limit(5);
 
-//     res.send(`
-//       <h2> Backend Server is Running! </h2>
-//       <p>Available API Routes:</p>
-//       <ul>
-//         <li><code>GET /api/candidates</code></li>
-//         <li><code>GET /api/quizzes</code></li>
-//         <li><code>GET /api/assign</code></li>
-//         <li><code>GET /api/results</code></li>
-//       </ul>
-//       <hr />
-//       <h3> Sample Candidates:</h3>
-//       <pre>${JSON.stringify(candidates, null, 2)}</pre>
 
-//       <h3> Sample Quizzes:</h3>
-//       <pre>${JSON.stringify(quizzes, null, 2)}</pre>
+  
+ app.get("/", async (req, res) => {
+   try {     const candidates = await Candidate.find().limit(5); // just showing top 5
+   const quizzes = await Quiz.find().limit(5);
+    const results = await Result.find().limit(5);
 
-//       <h3> Sample Results:</h3>
-//       <pre>${JSON.stringify(results, null, 2)}</pre>
-//     `);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send("Error fetching data from MongoDB");
-//   }
-// });
+   res.send(`
+     <h2> Backend Server is Running! </h2>
+           <p>Available API Routes:</p>
+    <ul>
+         <li><code>GET /api/candidates</code></li>
+         <li><code>GET /api/quizzes</code></li>
+         <li><code>GET /api/assign</code></li>
+         <li><code>GET /api/results</code></li>
+         <li><code>Patch/api/assign/:candidateId</code></li>
+       </ul>
+       <hr />
+       <h3> Sample Candidates:</h3>
+       <pre>${JSON.stringify(candidates, null, 2)}</pre>
+
+       <h3> Sample Quizzes:</h3>
+       <pre>${JSON.stringify(quizzes, null, 2)}</pre>
+
+       <h3> Sample Results:</h3>
+       <pre>${JSON.stringify(results, null, 2)}</pre>
+       
+     `);  
+    
+    } catch (err) {
+     console.error(err);
+     res.status(500).send("Error fetching data from MongoDB");
+   } });
 
 
 
@@ -78,7 +82,8 @@ app.use("/api/result", resultRoutes);
 app.use("/api/quiz-by-candidate", quizByCandidateRouter);
 app.use("/api/submit-quiz", submitQuizRouter);
 app.use("/api/state",States);
-app.use("api/assignment",updateAssignmentRouter)
+// app.use("api/assign",updateAssignmentRouter);
+
 
 
 

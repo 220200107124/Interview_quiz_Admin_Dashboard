@@ -67,15 +67,20 @@ router.post("/", async (req, res) => {
     });
     await submission.save();
 
-    // 2️⃣ Load quiz to compare correct answers
+    // 2Load quiz to compare correct answers
     const quiz = await Quiz.findById(assignmentId);
     if (!quiz) {
       return res.status(404).json({ error: "Quiz not found" });
     }
+    else if(quiz.status!==active){
+      return res.status(400).json({
+        error:"quiz not active"
+      })
+    }
 
     const totalQuestions = quiz.questions.length;
 
-    // 3️⃣ Calculate score
+    // 3️ Calculate score
     let score = 0;
     quiz.questions.forEach((q, i) => {
       if (
@@ -89,14 +94,14 @@ router.post("/", async (req, res) => {
     });
     const percentage = totalQuestions ? (score / totalQuestions) * 100 : 0;
 
-    // 4️⃣ Check if this candidate has already taken this quiz
+    // 4️Check if this candidate has already taken this quiz
     let resultDoc = await Result.findOne({
       candidateEmail,
       quizTitle: quiz.title,
     });
 
     if (resultDoc) {
-      // 🔄 Same quiz & candidate → increment attempts
+      //  Same quiz & candidate → increment attempts
       resultDoc.attempts = (resultDoc.attempts || 1) + 1;
       resultDoc.score = score;
       resultDoc.totalQuestions = totalQuestions;
@@ -105,7 +110,7 @@ router.post("/", async (req, res) => {
       resultDoc.date = Date.now();
       await resultDoc.save();
     } else {
-      // 🆕 First time for this quiz
+      //  First time for this quiz
       resultDoc = new Result({
         candidateName,
         candidateEmail,

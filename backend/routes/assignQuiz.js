@@ -14,7 +14,7 @@ router.post('/assign/:candidateId', async (req, res) => {
   const { quizId } = req.body;
 
   if (!quizId) {
-    return res.status(400).json({ message: 'quizId is required' });
+    return res.status(204).json({ message: 'quizId is required' });
   }
 
   try {
@@ -27,7 +27,7 @@ router.post('/assign/:candidateId', async (req, res) => {
     // Prevent duplicate assignment
     candidate.assignedQuizzes = candidate.assignedQuizzes || [];
     if (candidate.assignedQuizzes.includes(quiz._id)) {
-      return res.status(400).json({ message: 'Quiz already assigned to this candidate' });
+      return res.status(304).json({ message: 'Quiz already assigned to this candidate' });
     }
 
     // Assign the quiz to candidate

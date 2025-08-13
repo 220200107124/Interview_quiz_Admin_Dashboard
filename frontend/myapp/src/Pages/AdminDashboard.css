@@ -140,7 +140,7 @@
   tbody td:before {
     content: attr(data-label) ": ";
     font-weight: bold;
-    color: #2563eb;
+    color: #fefefe;
     min-width: 100px;
     flex-shrink: 0;
   }
@@ -186,11 +186,13 @@ td {
   font-size: 11px;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  color: black;
 }
 
 th {
-  font-weight: 600;
+  font-weight: 1000;
   background-color: #f8f9fa;
+
 }
 
 tr:nth-child(even) {

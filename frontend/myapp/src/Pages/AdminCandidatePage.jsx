@@ -246,7 +246,7 @@ const AdminCandidatePage = () => {
       // If already assigned → call PATCH to update token
       if (err.response && err.response.status ===304) {
         const patchRes = await axios.patch(
-          `${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}`
+          `${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}/${matchingQuiz._id}`
         );
         alert(patchRes.data.message);
       } else {

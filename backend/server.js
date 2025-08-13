@@ -8,8 +8,10 @@ const assignQuizRouter = require("./routes/assignQuiz");
 const resultRoutes = require("./routes/resultRouter");
 const quizByCandidateRouter = require("./routes/quizByCandidate");
 const submitQuizRouter = require("./routes/Submission");
-const States=require("./routes/State")
-const updateAssignmentRouter=require("./routes/updateAssignment")
+const States=require("./routes/State");
+const assignment =require("./routes/assignments");
+
+// const updateAssignmentRouter=require("./routes/updateAssignment")
 
 // modules
 
@@ -17,6 +19,7 @@ const Candidate = require("./models/quizzes");
 const Quiz = require("./models/candidate"); 
 const Result = require("./models/result");
 const Submission = require("./models/Submission");
+const Assignment=require("./models/Assignment");
 
 
 
@@ -31,14 +34,13 @@ app.use(express.json());
 // mongodb connection
 mongoose
   .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+ 
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB error:", err));
 
 
-  
+
  app.get("/", async (req, res) => {
    try {     const candidates = await Candidate.find().limit(5); // just showing top 5
    const quizzes = await Quiz.find().limit(5);
@@ -82,6 +84,7 @@ app.use("/api/result", resultRoutes);
 app.use("/api/quiz-by-candidate", quizByCandidateRouter);
 app.use("/api/submit-quiz", submitQuizRouter);
 app.use("/api/state",States);
+app.use("/api/assignment",assignment);
 // app.use("api/assign",updateAssignmentRouter);
 
 

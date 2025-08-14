@@ -1,194 +1,366 @@
-// // import { useParams } from 'react-router-dom';
-// // import { useEffect, useState } from 'react';
-// // import axios from 'axios';
-// // import './CandidateQuizpage.css';
+//  import { useParams } from 'react-router-dom';
+// import { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import './CandidateQuizpage.css';
 
-// // const CandidateQuizPage = () => {
-// //   const { candidateId } = useParams();
-// //   const [candidate, setCandidate] = useState(null);
-// //   const [quizzes, setQuizzes] = useState([]);
-// //   const [loading, setLoading] = useState(true);
-// //   const [selectedAnswers, setSelectedAnswers] = useState({});
-// //   const [submittedQuizzes, setSubmittedQuizzes] = useState({}); // track actual submissions
+// const CandidateQuizPage = () => {
+//   const { candidateId } = useParams();
+//   const [candidate, setCandidate] = useState(null);
+//   const [quizzes, setQuizzes] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const[candidateName,setCandidateName]=useState('');
+//   const[candidateEmail,setCandidateEmail]=useState('');
+//   const [selectedAnswers, setSelectedAnswers] = useState({});
+//   const [submittedQuizzes, setSubmittedQuizzes] = useState({});
+//    // track actual submissions
 
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         // Fetch candidate info
-// //         const candidateRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/candidates/${candidateId}`);
-// //         setCandidate(candidateRes.data);
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         // Fetch candidate info
+//         const candidateRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/candidates/${candidateId}`);
+//         setCandidate(candidateRes.data);
 
-// //         // Fetch assigned quizzes
-// //         const quizRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/quiz-by-candidate/${candidateId}`);
-// //         let quizData = quizRes.data;
-// //         if (quizData && !Array.isArray(quizData)) quizData = [quizData];
-// //         setQuizzes(quizData);
+//         // Fetch assigned quizzes
+//         const quizRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/quiz-by-candidate/${candidateId}`);
+//         let quizData = quizRes.data;
+//         if (quizData && !Array.isArray(quizData)) quizData = [quizData];
+//         setQuizzes(quizData);
 
-// //         // Optionally: fetch actual submitted quizzes from backend
-// //         // Example: const submittedRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/submissions/${candidateId}`);
-// //         // submittedRes.data should be array of assignmentIds
-// //         // Then mark them as submitted:
-// //         // const submittedMap = {};
-// //         // submittedRes.data.forEach(sub => { submittedMap[sub.assignmentId] = true });
-// //         // setSubmittedQuizzes(submittedMap);
+//         // Optionally: fetch actual submitted quizzes from backend
+//         // Example: const submittedRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/submissions/${candidateId}`);
+//         // submittedRes.data should be array of assignmentIds
+//         // Then mark them as submitted:
+//         // const submittedMap = {};
+//         // submittedRes.data.forEach(sub => { submittedMap[sub.assignmentId] = true });
+//         // setSubmittedQuizzes(submittedMap);
 
-// //         setLoading(false);
-// //       } catch (err) {
-// //         console.error('Error fetching candidate or quizzes:', err);
-// //         setLoading(false);
-// //       }
-// //     };
+//         setLoading(false);
+//       } catch (err) {
+//         console.error('Error fetching candidate or quizzes:', err);
+//         setLoading(false);
+//       }
+//     };
 
-// //     fetchData();
-// //   }, [candidateId]);
+//     fetchData();
+//   }, [candidateId]);
 
-// //   const handleAnswerChange = (quizIndex, questionIndex, value) => {
-// //     setSelectedAnswers(prev => ({
-// //       ...prev,
-// //       [quizIndex]: { ...prev[quizIndex], [questionIndex]: value }
-// //     }));
-// //   };
+//   const handleAnswerChange = (quizIndex, questionIndex, value) => {
+//     setSelectedAnswers(prev => ({
+//       ...prev,
+//       [quizIndex]: { ...prev[quizIndex], [questionIndex]: value }
+//     }));
+//   };
 
-// //   const handleSubmit = async (quizIndex) => {
-// //     const quizItem = quizzes[quizIndex];
-// //     const assignmentId = quizItem._id || quizItem.quiz?._id;
-// //     const answersArray = selectedAnswers[quizIndex] ? Object.values(selectedAnswers[quizIndex]) : [];
+//   const handleSubmit = async (quizIndex) => {
+//     const quizItem = quizzes[quizIndex];
+//     const assignmentId = quizItem._id || quizItem.quiz?._id;
+//     const answersArray = selectedAnswers[quizIndex] ? Object.values(selectedAnswers[quizIndex]) : [];
 
-// //     if (answersArray.length === 0) {
-// //       alert('Please answer at least one question before submitting!');
-// //       return;
-// //     }
+//     if (answersArray.length === 0) {
+//       alert('Please answer at least one question before submitting!');
+//       return;
+//     }
 
-// //     try {
-// //       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/submit-quiz`, {
-// //         assignmentId,
-// //         candidateId,
-// //         answers: answersArray
-// //       });
+//     try {
 
-// //       alert(res.data.message || 'Quiz submitted successfully!');
 
-// //       // Mark quiz as submitted locally
-// //       setSubmittedQuizzes(prev => ({ ...prev, [quizIndex]: true }));
-// //     } catch (err) {
-// //       console.error('Submission error:', err);
-// //       alert('Error submitting quiz, please try again.');
-// //     }
-// //   };
 
-// //   if (loading) return <div>Loading...</div>;
-// //   if (!candidate) return <div>Candidate not found</div>;
 
-// //   return (
-// //     <div className="dashboard-wrapper">
-// //       <div className="candidate-quiz-container">
-// //         <h1>Candidate Quiz Dashboard</h1>
+   
+//     if (!candidateName || !candidateEmail) {
+//       const candidateRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/candidates/${candidateId}`),
+//       candidatesData = candidateRes.data;
+//     }
 
-// //         <p><strong>Name:</strong> {candidate.name} {candidate.lname || ''}</p>
-// //         <p><strong>Email:</strong> {candidate.email}</p>
-// //         <p><strong>Tech:</strong> {candidate.tech}</p>
-// //         <p><strong>Difficulty:</strong> {candidate.difficulty}</p>
+//       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/submit-quiz`, {
+//         assignmentId,
+//         candidateId,
+//         answers: answersArray,
+//          candidatesName: candidateName || candidateData?.name || candidateData?.fullName,
+//         candidateEmail: candidateEmail || candidateData?.email,
+     
 
-// //         {quizzes.length > 0 ? (
-// //           quizzes.map((quizItem, quizIndex) => {
-// //             const questions = quizItem.questions || (quizItem.quiz && quizItem.quiz.questions) || [];
-// //             const quizTitle = quizItem.quiz?.title || quizItem.title || 'Quiz';
-// //             const isSubmitted = submittedQuizzes[quizIndex]; // true only if actually submitted
+//       });
 
-// //             return (
-// //               <div key={quizIndex} className="question-block">
-// //                 <h3>{quizTitle}</h3>
+//       alert(res.data.message || 'Quiz submitted successfully!');
 
-// //                 {questions.length > 0 ? (
-// //                   <ul>
-// //                     {questions.map((q, questionIndex) => (
-// //                       <li key={questionIndex}>
-// //                         {q.question && <div><strong>Q{questionIndex + 1}:</strong> {q.question}</div>}
-// //                         {q.options && q.options.map((opt, optIdx) => (
-// //                           <label key={optIdx}>
-// //                             <input
-// //                               type="radio"
-// //                               name={`quiz-${quizIndex}-question-${questionIndex}`}
-// //                               value={opt}
-// //                               disabled={isSubmitted}
-// //                               checked={selectedAnswers[quizIndex]?.[questionIndex] === opt}
-// //                               onChange={(e) => handleAnswerChange(quizIndex, questionIndex, e.target.value)}
-// //                             />
-// //                             {opt}
-// //                           </label>
-// //                         ))}
-// //                       </li>
-// //                     ))}
-// //                   </ul>
-// //                 ) : <div>No questions found for this quiz.</div>}
+//       // Mark quiz as submitted locally
+//       setSubmittedQuizzes(prev => ({ ...prev, [quizIndex]: true }));
+//     } catch (err) {
+//       console.error('Submission error:', err);
+//       alert('Error submitting quiz, please try again.');
+//     }
+//   };
 
-// //                 {isSubmitted && <p style={{ color: 'green' }}>You have submitted this quiz.</p>}
+//   if (loading) return <div>Loading...</div>;
+//   if (!candidate) return <div>Candidate not found</div>;
 
-// //                 <button
-// //                   className="submit-btn"
-// //                   onClick={() => handleSubmit(quizIndex)}
-// //                   disabled={isSubmitted}
-// //                 >
-// //                   {isSubmitted ? 'Submitted' : 'Submit Quiz'}
-// //                 </button>
-// //               </div>
-// //             );
-// //           })
-// //         ) : (
-// //           <p>No quiz assigned yet.</p>
-// //         )}
-// //       </div>
-// //     </div>
-// //   );
-// // };
+//   return (
+//     <div className="dashboard-wrapper">
+//       <div className="candidate-quiz-container">
+//         <h1>Candidate Quiz Dashboard</h1>
+
+//         <p><strong>Name:</strong> {candidate.name} {candidate.lname || ''}</p>
+//         <p><strong>Email:</strong> {candidate.email}</p>
+//         <p><strong>Tech:</strong> {candidate.tech}</p>
+//         <p><strong>Difficulty:</strong> {candidate.difficulty}</p>
+
+//         {quizzes.length > 0 ? (
+//           quizzes.map((quizItem, quizIndex) => {
+//             const questions = quizItem.questions || (quizItem.quiz && quizItem.quiz.questions) || [];
+//             const quizTitle = quizItem.quiz?.title || quizItem.title || 'Quiz';
+//             const isSubmitted = submittedQuizzes[quizIndex]; // true only if actually submitted
+
+//             return (
+//               <div key={quizIndex} className="question-block">
+//                 <h3>{quizTitle}</h3>
+
+//                 {questions.length > 0 ? (
+//                   <ul>
+//                     {questions.map((q, questionIndex) => (
+//                       <li key={questionIndex}>
+//                         {q.question && <div><strong>Q{questionIndex + 1}:</strong> {q.question}</div>}
+//                         {q.options && q.options.map((opt, optIdx) => (
+//                           <label key={optIdx}>
+//                             <input
+//                               type="radio"
+//                               name={`quiz-${quizIndex}-question-${questionIndex}`}
+//                               value={opt}
+//                               disabled={isSubmitted}
+//                               checked={selectedAnswers[quizIndex]?.[questionIndex] === opt}
+//                               onChange={(e) => handleAnswerChange(quizIndex, questionIndex, e.target.value)}
+//                             />
+//                             {opt}
+//                           </label>
+//                         ))}
+//                       </li>
+//                     ))}
+//                   </ul>
+//                 ) : <div>No questions found for this quiz.</div>}
+
+//                 {isSubmitted && <p style={{ color: 'green' }}>You have submitted this quiz.</p>}
+
+//                 <button
+//                   className="submit-btn"
+//                   onClick={() => handleSubmit(quizIndex)}
+//                   disabled={isSubmitted}
+//                 >
+//                   {isSubmitted ? 'Submitted' : 'Submit Quiz'}
+//                 </button>
+//               </div>
+//             );
+//           })
+//         ) : (
+//           <p>No quiz assigned yet.</p>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
 
 // export default CandidateQuizPage;
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import "./CandidateQuizpage.css";
+
+
+// import { useParams } from 'react-router-dom';
+// import { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import './CandidateQuizpage.css';
+
+// const CandidateQuizPage = () => {
+//   const { candidateId } = useParams();
+//   const [candidate, setCandidate] = useState(null);
+//   const [quizzes, setQuizzes] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [candidateName, setCandidateName] = useState('');
+//   const [candidateEmail, setCandidateEmail] = useState('');
+//   const [selectedAnswers, setSelectedAnswers] = useState({});
+//   const [submittedQuizzes, setSubmittedQuizzes] = useState({});
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         // Fetch candidate info
+//         const candidateRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/candidates/${candidateId}`);
+//         setCandidate(candidateRes.data);
+        
+//         // Set candidate name and email from the fetched data
+//         setCandidateName(candidateRes.data.name || candidateRes.data.fullName || '');
+//         setCandidateEmail(candidateRes.data.email || '');
+
+//         // Fetch assigned quizzes - try the quiz-by-candidate endpoint first
+//         const quizRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/quiz-by-candidate/${candidateId}`);
+//         console.log("=== QUIZ RESPONSE DEBUG ===");
+//         console.log("Quiz response data:", quizRes.data);
+//         let quizData = quizRes.data;
+//         if (quizData && !Array.isArray(quizData)) quizData = [quizData];
+//         setQuizzes(quizData);
+
+//         // Optionally: fetch actual submitted quizzes from backend
+//         // Example: const submittedRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/submissions/${candidateId}`);
+//         // submittedRes.data should be array of assignmentIds
+//         // Then mark them as submitted:
+//         // const submittedMap = {};
+//         // submittedRes.data.forEach(sub => { submittedMap[sub.assignmentId] = true });
+//         // setSubmittedQuizzes(submittedMap);
+
+//         setLoading(false);
+//       } catch (err) {
+//         console.error('Error fetching candidate or quizzes:', err);
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [candidateId]);
+
+//   const handleAnswerChange = (quizIndex, questionIndex, value) => {
+//     setSelectedAnswers(prev => ({
+//       ...prev,
+//       [quizIndex]: { ...prev[quizIndex], [questionIndex]: value }
+//     }));
+//   };
+
+//   const handleSubmit = async (quizIndex) => {
+//     const quizItem = quizzes[quizIndex];
+//     const assignmentId = quizItem._id || quizItem.quiz?._id;
+//     const answersArray = selectedAnswers[quizIndex] ? Object.values(selectedAnswers[quizIndex]) : [];
+
+//     if (answersArray.length === 0) {
+//       alert('Please answer at least one question before submitting!');
+//       return;
+//     }
+
+//     try {
+//       // Fetch candidate details if not already available (fallback)
+//       let candidateData = null;
+//       if (!candidateName || !candidateEmail) {
+//         const candidateRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/candidates/${candidateId}`);
+//         candidateData = candidateRes.data;
+//       }
+
+//       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/submit-quiz`, {
+//         assignmentId,
+//         candidateId,
+//         candidateName: candidateName || candidateData?.name || candidateData?.fullName,
+//         candidateEmail: candidateEmail || candidateData?.email,
+//         answers: answersArray
+//       });
+
+//       alert(res.data.message || 'Quiz submitted successfully!');
+
+//       // Mark quiz as submitted locally
+//       setSubmittedQuizzes(prev => ({ ...prev, [quizIndex]: true }));
+//     } catch (err) {
+//       console.error('Submission error:', err);
+//       alert('Error submitting quiz, please try again.');
+//     }
+//   };
+
+//   if (loading) return <div>Loading...</div>;
+//   if (!candidate) return <div>Candidate not found</div>;
+
+//   return (
+//     <div className="dashboard-wrapper">
+//       <div className="candidate-quiz-container">
+//         <h1>Candidate Quiz Dashboard</h1>
+
+//         <p><strong>Name:</strong> {candidate.name} {candidate.lname || ''}</p>
+//         <p><strong>Email:</strong> {candidate.email}</p>
+//         <p><strong>Tech:</strong> {candidate.tech}</p>
+//         <p><strong>Difficulty:</strong> {candidate.difficulty}</p>
+
+//         {quizzes.length > 0 ? (
+//           quizzes.map((quizItem, quizIndex) => {
+//             const questions = quizItem.questions || (quizItem.quiz && quizItem.quiz.questions) || [];
+//             const quizTitle = quizItem.quiz?.title || quizItem.title || 'Quiz';
+//             const isSubmitted = submittedQuizzes[quizIndex]; // true only if actually submitted
+
+//             return (
+//               <div key={quizIndex} className="question-block">
+//                 <h3>{quizTitle}</h3>
+
+//                 {questions.length > 0 ? (
+//                   <ul>
+//                     {questions.map((q, questionIndex) => (
+//                       <li key={questionIndex}>
+//                         {q.question && <div><strong>Q{questionIndex + 1}:</strong> {q.question}</div>}
+//                         {q.options && q.options.map((opt, optIdx) => (
+//                           <label key={optIdx}>
+//                             <input
+//                               type="radio"
+//                               name={`quiz-${quizIndex}-question-${questionIndex}`}
+//                               value={opt}
+//                               disabled={isSubmitted}
+//                               checked={selectedAnswers[quizIndex]?.[questionIndex] === opt}
+//                               onChange={(e) => handleAnswerChange(quizIndex, questionIndex, e.target.value)}
+//                             />
+//                             {opt}
+//                           </label>
+//                         ))}
+//                       </li>
+//                     ))}
+//                   </ul>
+//                 ) : <div>No questions found for this quiz.</div>}
+
+//                 {isSubmitted && <p style={{ color: 'green' }}>You have submitted this quiz.</p>}
+
+//                 <button
+//                   className="submit-btn"
+//                   onClick={() => handleSubmit(quizIndex)}
+//                   disabled={isSubmitted}
+//                 >
+//                   {isSubmitted ? 'Submitted' : 'Submit Quiz'}
+//                 </button>
+//               </div>
+//             );
+//           })
+//         ) : (
+//           <p>No quiz assigned yet.</p>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default CandidateQuizPage;
+
+
+
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import './CandidateQuizpage.css';
 
 const CandidateQuizPage = () => {
   const { candidateId } = useParams();
-  const navigate = useNavigate();
+
   const [candidate, setCandidate] = useState(null);
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [submittedQuizzes, setSubmittedQuizzes] = useState({});
-
+const  [assignmentId,setAssignmentId] = useState()
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const candidateRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/candidates/${candidateId}`
-        );
-        setCandidate(candidateRes.data);
-
-        const quizRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/quiz-by-candidate/${candidateId}`
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/assignment/getByToken/${candidateId}`
         );
 
-        let quizData = quizRes.data;
+        const candidateData = data?.data?.candidateData;
+        const quizData = data?.data?.quizData?.questions || [];
+      
+        setAssignmentId(data?.data?._id)
 
-        const uniqueQuizzes = [];
-        const seenIds = new Set();
+        if (!candidateData) {
+          throw new Error('Candidate data not found');
+        }
 
-        quizData.forEach((item) => {
-          const id = item.quiz?._id || item._id;
-          if (!seenIds.has(id)) {
-            seenIds.add(id);
-            uniqueQuizzes.push(item);
-          }
-        });
-
-        setQuizzes(uniqueQuizzes);
-
-        if (quizData && !Array.isArray(quizData)) quizData = [quizData];
-
+        setCandidate(candidateData);
         setQuizzes(quizData);
       } catch (err) {
-        console.error("Error fetching candidate or quizzes:", err);
+        console.error('Error fetching candidate or quizzes:', err);
       } finally {
         setLoading(false);
       }
@@ -196,24 +368,20 @@ const CandidateQuizPage = () => {
 
     fetchData();
   }, [candidateId]);
-  
 
-  const handleAnswerChange = (quizIndex, questionIndex, value) => {
+  const handleAnswerChange = (quizIndex, optionIndex) => {
     setSelectedAnswers((prev) => ({
       ...prev,
-      [quizIndex]: { ...prev[quizIndex], [questionIndex]: value },
+      [quizIndex]: optionIndex,
     }));
   };
-  // CandidateQuizPage.js
+
+  console.log("candidate",candidate)
   const handleSubmit = async (quizIndex) => {
     const quizItem = quizzes[quizIndex];
-    const assignmentId = quizItem._id || quizItem.quiz?._id;
-    const answersArray = selectedAnswers[quizIndex]
-      ? Object.values(selectedAnswers[quizIndex])
-      : [];
 
-    if (answersArray.length === 0) {
-      alert("Please answer at least one question before submitting!");
+    if (selectedAnswers[quizIndex] === undefined) {
+      alert('Please select an answer before submitting!');
       return;
     }
 
@@ -222,25 +390,19 @@ const CandidateQuizPage = () => {
         `${process.env.REACT_APP_API_URL}/api/submit-quiz`,
         {
           assignmentId,
-          candidateId,
-          candidateName: candidate.name,
-          candidateEmail: candidate.email,
-          answers: answersArray,
-          status:"submitted",
+          candidateId:candidate?._id,
+          candidateName: candidate.name || '',
+          candidateEmail: candidate.email || '',
+
+          answers: [selectedAnswers[quizIndex]], // single answer for this question
         }
       );
 
-      alert(res.data.message || "Quiz submitted successfully!");
+      alert(res.data.message || 'Quiz submitted successfully!');
       setSubmittedQuizzes((prev) => ({ ...prev, [quizIndex]: true }));
-
-      // Redirect after 1 minute (60,000 ms)
-      setTimeout(() => {
-        navigate("/thank-you");
-      }, 30 * 100);
     } catch (err) {
-      console.error("Submission error:", err);
-      // console.log(err.respose.data);
-      alert("Error submitting quiz, please try again.");
+      console.error('Submission error:', err);
+      alert('Error submitting quiz, please try again.');
     }
   };
 
@@ -248,87 +410,53 @@ const CandidateQuizPage = () => {
   if (!candidate) return <div>Candidate not found</div>;
 
   return (
-    
+    <div className="dashboard-wrapper">
       <div className="candidate-quiz-container">
         <h1>Candidate Quiz Dashboard</h1>
-        <p>
-          <strong>Name:</strong> {candidate.name} {candidate.lname}
-        </p>
-        <p>
-          <strong>Email:</strong> {candidate.email}
-        </p>
-        <p>
-          <strong>Tech:</strong> {candidate.tech}
-        </p>
-        <p>
-          <strong>Difficulty:</strong> {candidate.difficulty}
-        </p>
+
+        <p><strong>Name:</strong> {candidate.name} {candidate.lname || ''}</p>
+        <p><strong>Email:</strong> {candidate.email}</p>
+        <p><strong>Tech:</strong> {candidate.tech}</p>
+        <p><strong>Difficulty:</strong> {candidate.difficulty}</p>
 
         {quizzes.length > 0 ? (
           quizzes.map((quizItem, quizIndex) => {
-            const questions =
-              quizItem.questions ||
-              (quizItem.quiz && quizItem.quiz.questions) ||
-              [];
-            const quizTitle = quizItem.quiz?.title || quizItem.title || "Quiz";
             const isSubmitted = submittedQuizzes[quizIndex];
 
             return (
               <div key={quizIndex} className="question-block">
-                <h3>{quizTitle}</h3>
+                <h3>Q{quizIndex + 1}: {quizItem.question}</h3>
 
-                {questions.length > 0 ? (
+                {quizItem.options?.length > 0 ? (
                   <ul>
-                    {questions.map((q, questionIndex) => (
-                      <li key={questionIndex}>
-                        {q.question && (
-                          <div>
-                            <strong>Q{questionIndex + 1}:</strong> {q.question}
-                          </div>
-                        )}
-                        {q.options &&
-                          q.options.map((opt, optIdx) => (
-                            <label key={optIdx}>
-                              <input
-                                type="radio"
-                                name={`quiz-${quizIndex}-question-${questionIndex}`}
-                                value={opt}
-                                disabled={isSubmitted}
-                                checked={
-                                  selectedAnswers[quizIndex]?.[
-                                    questionIndex
-                                  ] === opt
-                                }
-                                onChange={(e) =>
-                                  handleAnswerChange(
-                                    quizIndex,
-                                    questionIndex,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              {opt}
-                            </label>
-                          ))}
+                    {quizItem.options.map((opt, optIdx) => (
+                      <li key={optIdx}>
+                        <label>
+                          <input
+                            type="radio"
+                            name={`quiz-${quizIndex}`}
+                            value={optIdx}
+                            disabled={isSubmitted}
+                            checked={selectedAnswers[quizIndex] === optIdx}
+                            onChange={() => handleAnswerChange(quizIndex, optIdx)}
+                          />
+                          {opt}
+                        </label>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <div>No questions found for this quiz.</div>
+                  <div>No options found for this question.</div>
                 )}
 
-                {isSubmitted && (
-                  <p style={{ color: "green" }}>
-                    You have submitted this quiz.
-                  </p>
-                )}
+                {isSubmitted && <p style={{ color: 'green' }}>You have submitted this quiz.</p>}
 
                 <button
                   className="submit-btn"
                   onClick={() => handleSubmit(quizIndex)}
                   disabled={isSubmitted}
                 >
-                  {isSubmitted ? "Submitted" : "Submit Quiz"}
+                  {isSubmitted ? 'Submitted' : 'Submit Quiz'}
                 </button>
               </div>
             );
@@ -337,77 +465,173 @@ const CandidateQuizPage = () => {
           <p>No quiz assigned yet.</p>
         )}
       </div>
-      
-    
+    </div>
   );
 };
 
 export default CandidateQuizPage;
-// import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import axios from "axios";
 
-// export default function CandidateQuiz() {
-//   const { token } = useParams();
-//   const [quiz, setQuiz] = useState(null);
-//   const [answers, setAnswers] = useState([]);
+
+// import { useParams } from 'react-router-dom';
+// import { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import './CandidateQuizpage.css';
+
+// const CandidateQuizPage = () => {
+//   const { candidateId } = useParams();
+//   const [candidate, setCandidate] = useState(null);
+//   const [quizzes, setQuizzes] = useState([]);
 //   const [loading, setLoading] = useState(true);
+//   const [candidateName, setCandidateName] = useState('');
+//   const [candidateEmail, setCandidateEmail] = useState('');
+//   const [selectedAnswers, setSelectedAnswers] = useState({});
+//   const [submittedQuizzes, setSubmittedQuizzes] = useState({});
 
 //   useEffect(() => {
-//     axios.get(`${process.env.REACT_APP_API_URL}/api/assignment/quiz/${token}`)
-//       .then((res) => {
-//         setQuiz(res.data);
-//         setAnswers(res.data.questions.map(() => "")); // Initialize answers
+//     const fetchData = async () => {
+//       try {
+//         // Fetch candidate info
+//         const candidateRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/assignment/getByToken/${candidateId}`);
+
+// console.log("candidateRes.data",candidateRes.data.data.quizData.questions
+// )
+
+//         setCandidate(candidateRes.data?.data?.candidateData);
+        
+//         // Set candidate name and email from the fetched data
+//         setCandidateName(candidateRes.data?.data?.candidateData?.name || candidateRes.data?.data?.candidateData?.fullName || '');
+//         setCandidateEmail(candidateRes.data?.data?.candidateData?.email || '');
+// setQuizzes(candidateRes.data.data.quizData.questions
+// );
+
+       
+
 //         setLoading(false);
-//       })
-//       .catch((err) => {
-//         console.error(err);
+//       } catch (err) {
+//         console.error('Error fetching candidate or quizzes:', err);
 //         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [candidateId]);
+
+//   const handleAnswerChange = (quizIndex, questionIndex, value) => {
+//     setSelectedAnswers(prev => ({
+//       ...prev,
+//       [quizIndex]: { ...prev[quizIndex], [questionIndex]: value }
+//     }));
+//   };
+
+//   const handleSubmit = async (quizIndex) => {
+//     const quizItem = quizzes[quizIndex];
+//     console.log(quizItem)
+//     const assignmentId = quizItem._id || quizItem.quiz?._id;
+//     const answersArray = selectedAnswers[quizIndex] ? Object.values(selectedAnswers[quizIndex]) : [];
+
+//     if (answersArray.length === 0) {
+//       alert('Please answer at least one question before submitting!');
+//       return;
+//     }
+    
+
+//     try {
+//       // Fetch candidate details if not already available (fallback)
+//       let candidateData = null;
+//       if (!candidateName || !candidateEmail) {
+//         const candidateRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/candidates/${candidateId}`);
+//         candidateData = candidateRes.data;
+//       }
+//        console.log(assignmentId);
+//       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/submit-quiz`, {
+//         assignmentId,
+//         candidateId,
+//         candidateName: candidateName || candidateData?.name ,
+//         candidateEmail: candidateEmail || candidateData?.email,
+//         answers: answersArray
 //       });
-//   }, [token]);
+      
 
-//   const handleOptionChange = (qIndex, option) => {
-//     const updated = [...answers];
-//     updated[qIndex] = option;
-//     setAnswers(updated);
+//       alert(res.data.message || 'Quiz submitted successfully!');
+
+//       // Mark quiz as submitted locally
+//       setSubmittedQuizzes(prev => ({ ...prev, [quizIndex]: true }));
+//     } catch (err) {
+//       console.error('Submission error:', err);
+//       alert('Error submitting quiz, please try again.');
+//     }
 //   };
 
-//   const handleSubmit = () => {
-//     axios.post(`${process.env.REACT_APP_API_URL}/api/submit-quiz/${token}`, {
-//       answers: answers.map((opt, index) => ({
-//         questionIndex: index,
-//         selectedOption: opt,
-//       })),
-//     })
-//     .then(() => alert("Quiz submitted successfully!"))
-//     .catch((err) => console.error(err));
-//   };
+//   if (loading) return <div>Loading...</div>;
+//   if (!candidate) return <div>Candidate not found</div>;
 
-//   if (loading) return <p>Loading...</p>;
-//   if (!quiz) return <p>Invalid quiz token.</p>;
 
+//   console.log('quizzesquizzesquizzes',quizzes)
 //   return (
-//     <div>
-//       <h1>{quiz.title}</h1>
-//       {quiz.questions.map((q, index) => (
-//         <div key={index} style={{ margin: "20px 0" }}>
-//           <p><strong>Q{index + 1}:</strong> {q.question}</p>
-//           {q.options.map((opt, i) => (
-//             <label key={i} style={{ display: "block" }}>
-//               <input
-//                 type="radio"
-//                 name={`q-${index}`}
-//                 value={opt}
-//                 checked={answers[index] === opt}
-//                 onChange={() => handleOptionChange(index, opt)}
-//               />
-//               {opt}
-//             </label>
-//           ))}
-//         </div>
-//       ))}
-//       <button onClick={handleSubmit}>Submit</button>
+//     <div className="dashboard-wrapper">
+//       <div className="candidate-quiz-container">
+//         <h1>Candidate Quiz Dashboard</h1>
+
+//         <p><strong>Name:</strong> {candidate.name} {candidate.lname || ''}</p>
+//         <p><strong>Email:</strong> {candidate.email}</p>
+//         <p><strong>Tech:</strong> {candidate.tech}</p>
+//         <p><strong>Difficulty:</strong> {candidate.difficulty}</p>
+
+
+// {quizzes.length > 0 ? (
+//   quizzes.map((quizItem, quizIndex) => {
+//     const isSubmitted = submittedQuizzes[quizIndex];
+    
+//     return (
+//       <div key={quizIndex} className="question-block">
+//         {/* Question */}
+//         <h3>Q{quizIndex + 1}: {quizItem.question}</h3>
+
+//         {/* Options */}
+//         {quizItem.options && quizItem.options.length > 0 ? (
+//           <ul>
+//             {quizItem.options.map((opt, optIdx) => (
+//               <li key={optIdx}>
+//                 <label>
+//                   <input
+//                     type="radio"
+//                     name={`quiz-${quizIndex}`} // all options in one question share name
+//                     value={optIdx}
+//                     disabled={isSubmitted}
+//                     checked={selectedAnswers[quizIndex] === optIdx}
+//                     onChange={(e) => handleAnswerChange(quizIndex, optIdx)}
+//                   />
+//                   {opt}
+//                 </label>
+//               </li>
+//             ))}
+//           </ul>
+//         ) : (
+//           <div>No options found for this question.</div>
+//         )}
+
+//         {/* Submission Status */}
+//         {isSubmitted && <p style={{ color: 'green' }}>You have submitted this quiz.</p>}
+
+//         {/* Submit Button */}
+//         <button
+//           className="submit-btn"
+//           onClick={() => handleSubmit(quizIndex)}
+//           disabled={isSubmitted}
+//         >
+//           {isSubmitted ? 'Submitted' : 'Submit Quiz'}
+//         </button>
+//       </div>
+//     );
+//   })
+// ) : (
+//   <p>No quiz assigned yet.</p>
+// )}
+
+      
+//       </div>
 //     </div>
 //   );
-// }
+// };
 
+// export default CandidateQuizPage;

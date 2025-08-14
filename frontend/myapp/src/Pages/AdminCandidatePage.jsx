@@ -117,10 +117,10 @@ const AdminCandidatePage = () => {
       return alert("Please fill all fields");
     }
 
-    const emailExists = candidates.some(
-      (c) => c.email.toLowerCase() === newCandidate.email.toLowerCase()
-    );
-    if (emailExists) return alert("Candidate with this email already exists.");
+    // const emailExists = candidates.some(
+    //   (c) => c.email.toLowerCase() === newCandidate.email.toLowerCase()
+    // );
+    // if (emailExists) return alert("Candidate with this email already exists.");
 
     setLoading(true);
     try {
@@ -180,92 +180,177 @@ const AdminCandidatePage = () => {
     }
   };
 
-  // const handleSendTest = async (candidate) => {
-  //   const matchingQuiz = quizzes.find(
-  //     (q) =>
-  //       q.category.toLowerCase() === candidate.tech.toLowerCase() &&
-  //       q.difficulty.toLowerCase() === candidate.difficulty.toLowerCase()
-  //   );
-  //   if (!matchingQuiz)
-  //     return alert(
-  //       `No quiz found for ${candidate.tech} - ${candidate.difficulty}`
-  //     );
 
-  //   setSending(true);
-  //   setIsDisabled(true); // disable button
-
-  //   try {
-  //     if (!window.confirm("Are you sure to send this test?")) return;
-  //     const res = await axios.post(
-  //       `${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}`,
-  //       {
-  //         quizId: matchingQuiz._id,
-  //         title: matchingQuiz.title,
-  //       }
-  //     );
-  //     alert(res.data.message);
-  //     setEditingCandidate(null);
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("Failed to assign quiz");
-  //   } finally {
-  //     setSending(false);
-  //     setTimeout(() => {
-  //       setIsDisabled(false);
-  //     }, 30 * 1000); //  re-enable after 2 minutes
-  //   }
-  // };
+  // Fixed handleSendTest function for the React component
   const handleSendTest = async (candidate) => {
-  const matchingQuiz = quizzes.find(
-    (q) =>
-      q.category.toLowerCase() === candidate.tech.toLowerCase() &&
-      q.difficulty.toLowerCase() === candidate.difficulty.toLowerCase()
-  );
-  if (!matchingQuiz)
-    return alert(
-      `No quiz found for ${candidate.tech} - ${candidate.difficulty}`
+    console.log("Starting handleSendTest for candidate:", candidate._id);
+
+    // Find matching quiz
+    const matchingQuiz = quizzes.find(
+      (q) =>
+        q.category.toLowerCase() === candidate.tech.toLowerCase() &&
+        q.difficulty.toLowerCase() === candidate.difficulty.toLowerCase()
     );
 
-  setSending(true);
-  setIsDisabled(true); // disable button
+    if (!matchingQuiz) {
+      alert(`No quiz found for ${candidate.tech} - ${candidate.difficulty}`);
+      return;
+    }
 
-  try {
-    if (!window.confirm("Are you sure to send this test?")) return;
+    console.log("Found matching quiz:", matchingQuiz._id);
 
-    // First try POST (assign quiz)
+    // Confirm action
+    if (
+      !window.confirm(
+        `Are you sure you want to send the ${matchingQuiz.title} test to ${candidate.name} ${candidate.lname}?`
+      )
+    ) {
+      return;
+    }
+
+    setSending(true);
+    setIsDisabled(true);
+
     try {
-      const res = await axios.post(
+      // Try to assign quiz (POST request)
+      console.log("Attempting to assign quiz...");
+      const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}`,
         {
           quizId: matchingQuiz._id,
           title: matchingQuiz.title,
+         
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 10000, // 10 second timeout
         }
       );
-      alert(res.data.message);
-    } catch (err) {
-      // If already assigned → call PATCH to update token
-      if (err.response && err.response.status ===304) {
-        const patchRes = await axios.patch(
-          `${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}/${matchingQuiz._id}`
-        );
-        alert(patchRes.data.message);
+
+      console.log("Assignment successful:", response.data);
+      alert(response.data.message || "Quiz assigned successfully!");
+
+      // Close the edit modal
+      setEditingCandidate(null);
+    } catch (error) {
+      console.error("Assignment error:", error);
+
+      // Handle different types of errors
+      if (error.response) {
+        // Server responded with error status
+        const status = error.response.status;
+        const message = error.response.data?.message || "Unknown server error";
+
+        console.log("Server error status:", status);
+        console.log("Server error message:", message);
+
+        if (status === 404) {
+          alert(
+            "Candidate or quiz not found. Please refresh the page and try again."
+          );
+        } else if (status === 400) {
+          alert(`Invalid request: ${message}`);
+        } else if (status === 500) {
+          alert("Server error occurred. Please try again later.");
+        } else {
+          alert(`Error: ${message}`);
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        console.log("Network error - no response received");
+        alert("Network error. Please check your connection and try again.");
       } else {
-        throw err;
+        // Something else happened
+        console.log("Unexpected error:", error.message);
+        alert("An unexpected error occurred. Please try again.");
       }
+    } finally {
+      setSending(false);
+
+      // Re-enable button after 10 seconds instead of 30
+      setTimeout(() => {
+        setIsDisabled(false);
+      }, 10 * 1000);
+    }
+  };
+
+  // Alternative version if you want to handle the reassignment case separately
+  const handleSendTestWithReassignment = async (candidate) => {
+    console.log("Starting handleSendTest for candidate:", candidate._id);
+
+    const matchingQuiz = quizzes.find(
+      (q) =>
+        q.category.toLowerCase() === candidate.tech.toLowerCase() &&
+        q.difficulty.toLowerCase() === candidate.difficulty.toLowerCase()
+    );
+
+    if (!matchingQuiz) {
+      alert(`No quiz found for ${candidate.tech} - ${candidate.difficulty}`);
+      return;
     }
 
-    setEditingCandidate(null);
-  } catch (err) {
-    console.error(err);
-    alert("Failed to assign or update quiz token");
-  } finally {
-    setSending(false);
-    setTimeout(() => {
-      setIsDisabled(false);
-    }, 30 * 1000); // re-enable after 30s
-  }
-};
+    if (
+      !window.confirm(
+        `Are you sure you want to send the ${matchingQuiz.title} test to ${candidate.name} ${candidate.lname}?`
+      )
+    ) {
+      return;
+    }
 
+    setSending(true);
+    setIsDisabled(true);
+
+    try {
+      // First try POST (assign quiz)
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}`,
+          {
+            quizId: matchingQuiz._id,
+            title: matchingQuiz.title,
+            Email:matchingQuiz.Email,
+          }
+        );
+
+        console.log("New assignment created:", response.data);
+        alert(response.data.message || "Quiz assigned successfully!");
+      } catch (postError) {
+        // If assignment already exists, try to update it
+        if (postError.response?.status === 200) {
+          // The POST actually succeeded but returned existing assignment
+          alert(
+            postError.response.data.message || "Quiz reassigned successfully!"
+          );
+        } else {
+          // Try PATCH for reassignment
+          console.log("POST failed, trying PATCH for reassignment...");
+          const patchResponse = await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/assign/${candidate._id}/${matchingQuiz._id}`
+          );
+
+          console.log("Reassignment successful:", patchResponse.data);
+          alert(patchResponse.data.message || "Quiz reassigned successfully!");
+        }
+      }
+
+      setEditingCandidate(null);
+    } catch (error) {
+      console.error("Assignment/reassignment error:", error);
+
+      if (error.response) {
+        alert(
+          `Error: ${error.response.data?.message || "Server error occurred"}`
+        );
+      } else {
+        alert("Network error. Please check your connection and try again.");
+      }
+    } finally {
+      setSending(false);
+      setTimeout(() => setIsDisabled(false), 10 * 1000);
+    }
+  };
 
   return (
     <div>
@@ -462,6 +547,53 @@ const AdminCandidatePage = () => {
                 </select>
                 <div className="modal-actions">
                   {sending ? (
+                    <div className="loading-container">
+                      <div className="loader"></div>
+                      <span>Sending test...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleSendTest(editingCandidate)}
+                        disabled={isDisabled}
+                        className={`action-button primary ${
+                          isDisabled ? "disabled" : ""
+                        }`}
+                        title={
+                          isDisabled
+                            ? "Please wait before sending another test"
+                            : "Send test to candidate"
+                        }
+                      >
+                        <SendIcon />
+                        <span>
+                          {isDisabled ? "Please wait..." : "Send Test"}
+                        </span>
+                      </button>
+
+                      <button
+                        onClick={handleUpdateCandidate}
+                        className="action-button secondary"
+                        disabled={sending}
+                        title="Save candidate information changes"
+                      >
+                        Save Changes
+                      </button>
+
+                      <button
+                        onClick={() => setEditingCandidate(null)}
+                        className="action-button cancel"
+                        disabled={sending}
+                        title="Close without saving changes"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {/* <div className="modal-actions">
+                  {sending ? (
                     <div className="loader"></div>
                   ) : (
                     <>
@@ -475,11 +607,11 @@ const AdminCandidatePage = () => {
 
                       <button onClick={handleUpdateCandidate}>Save</button>
                       <button onClick={() => setEditingCandidate(null)}>
-                        Cancel
+                        Exit
                       </button>
                     </>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           )}

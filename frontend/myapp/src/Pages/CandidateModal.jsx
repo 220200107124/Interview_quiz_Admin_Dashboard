@@ -133,7 +133,7 @@ function CandidateModal({ candidateId, candidateName, onClose }) {
     async function fetchCandidateDetails() {
       try {
         const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/result`
+          `${process.env.REACT_APP_API_URL}/api/results/${candidateId}`
         );
         if (!res.ok) throw new Error("Failed to fetch candidate details");
         const data = await res.json();

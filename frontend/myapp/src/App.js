@@ -39,7 +39,7 @@ function App() {
       <Route path="/admin-candidate" element={
         <Layout>
 
-        <AdminCandidatePage />
+        <AdminCandidatePage />  
         </Layout>} />
       <Route path="/admin-result" element={ 
         <Layout>

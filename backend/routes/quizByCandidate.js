@@ -23,7 +23,7 @@ router.get("/:candidateId", async (req, res) => {
     // Map to desired structure for React
     const assignedQuizzes = assignments.map((a) => ({
       token: a.token,
-      quiz: a.quizId, // populated quiz object { title, questions, etc. }
+      quiz: a.quizId, // populated quiz object { title, questions. }
     }));
 
     res.json(assignedQuizzes);

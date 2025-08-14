@@ -13,6 +13,7 @@
 // models/Result.js
 
 const mongoose = require("mongoose");
+const Assignment = require("./Assignment");
 
 const resultSchema = new mongoose.Schema({
   candidateName: { type: String, required: true },
@@ -29,11 +30,11 @@ const resultSchema = new mongoose.Schema({
   attempts: { type: Number, default: 1 },
 
   // New status field
-  // status: { type: String, enum: ["pending", "submitted"], default: "pending" },
+   status: { type: String, enum: ["pending", "submitted"], default: "pending" },
 
   // Timestamps
   date: { type: Date, default: Date.now }
-});
+  });
 
 module.exports = mongoose.model("Result", resultSchema);
 

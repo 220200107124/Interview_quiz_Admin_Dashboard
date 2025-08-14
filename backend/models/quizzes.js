@@ -29,7 +29,7 @@ const questionSchema = new mongoose.Schema({
   question: { type: String, required: true },
   options: [{ type: String, required: true }],
   correctAnswer: { type: Number, required: true } // index of the correct option
-}, { _id: true }); // _id true so each question can be edited/deleted individually
+},{_id:true});  //so each question can be edited/deleted individually
 
 const quizSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -40,4 +40,4 @@ const quizSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('quizzes', quizSchema);
+module.exports = mongoose.model('Quiz', quizSchema);

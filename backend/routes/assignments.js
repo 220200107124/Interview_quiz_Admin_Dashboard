@@ -5,6 +5,7 @@ const Candidate = require('../models/candidate');
 const Quiz = require('../models/quizzes');
 const crypto = require('crypto'); // Make sure this is imported!
 const Assignment = require('../models/Assignment');
+const candidate = require('../models/candidate');
 
 // POST /api/assign/assign/:candidateId
 router.post('/assign/:candidateId', async (req, res) => {
@@ -108,7 +109,7 @@ router.post('/assign/:candidateId', async (req, res) => {
 
   } catch (err) {
     console.error('Assign error:', err);
-    
+     
     // Handle specific validation errors
     if (err.name === 'ValidationError') {
       console.error('Validation Error Details:');
@@ -217,15 +218,18 @@ router.get("/getByToken/:token", async (req, res) => {
           assignedAt: 1,
           startedAt: 1,
           completedAt: 1,
-                    "candidateData._id": 1,
-
+          "candidateData._id": 1,
+          
           "candidateData.name": 1,
           "candidateData.email": 1,
+          "candidateData.tech":1,
+          "candidateData.difficulty":1,
           "quizData.title": 1,
           "quizData.questions": 1
         }
       }
     ]);
+
 
     if (!result.length) {
       return res.status(404).json({ success: false, message: "Invalid or expired token" });

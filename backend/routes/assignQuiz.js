@@ -283,7 +283,7 @@ router.post("/assign/:candidateId", async (req, res) => {
       console.log("Quiz reassigned to existing assignment");
 
       // Prepare quiz link
-      const quizLink = `http://localhost:3000/quiz/${assignment.token}`;
+    const quizLink = `https://comfy-selkie-020033.netlify.app/quiz/${assignment.token}`;
 
       // Send mail
       await sendMail(

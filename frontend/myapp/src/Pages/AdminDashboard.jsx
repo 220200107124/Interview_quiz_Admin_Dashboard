@@ -57,22 +57,7 @@ function AdminDashboard() {
   return (
       
       <div>
-        {/* <header className="dashboard-header">
-          <h1>Admin Dashboard</h1>
-          <div className="header-buttons">
-            <button className="creates-btn" onClick={handleCreateQuiz}>
-              + Create Quiz
-            </button>
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
-        </header> */}
-
-        {/* <div className="stats-cards">
-          <DashboardStats />
-        </div> */}
-
+    
         <div className="quiz-list">
           <h2>Your Quizzes</h2>
           {quizzes.length === 0 ? (

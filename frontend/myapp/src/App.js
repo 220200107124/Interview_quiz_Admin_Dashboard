@@ -1,5 +1,5 @@
 import "./App.css";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import AdminLogin from "./Pages/AdminLogin";
 import AdminDashboard from "./Pages/AdminDashboard";
 import CreateQuizpage from "./Pages/CreateQuizpage";
@@ -16,6 +16,7 @@ function App() {
 
   console.log("test");
   return (
+      <Router>
     <Routes>
       <Route path="/" element={<LoginWrapper />} />
       <Route path="/admin-login" element={<LoginWrapper />} />
@@ -51,6 +52,7 @@ function App() {
       </Layout>} />
       {/* <Route path='/test-candidate' element={<TestCandidatePage/>}/> */}
     </Routes>
+    </Router>
   );
 }
 

@@ -13,6 +13,8 @@ import Layout from "./Components/Layout";
 // import CandidateQuizpage from './Pages/CandidateQuizpage';
 
 function App() {
+
+  console.log("test");
   return (
     <Routes>
       <Route path="/" element={<LoginWrapper />} />

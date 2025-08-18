@@ -94,7 +94,7 @@ router.post("/send-test/:candidateId", async (req, res) => {
     if (!assignment)
       return res.status(404).json({ message: "Assignment not found for candidate" });
 
-    const quizLink = `http://localhost:3000/quiz/${assignment.token}`;
+    const quizLink = `https://comfy-selkie-020033.netlify.app/quiz/${assignment.token}`;
 
     // Use common sendMail function
     await sendMail(

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./AdminCandidatePage.css";
-// import AdminSideBar from "../Components/AdminSideBar";
-// import Footer from "../Components/Footer";
+
+
 
 const SendIcon = () => (
   <svg
@@ -276,82 +276,6 @@ const AdminCandidatePage = () => {
     }
   };
 
-  // Alternative version if you want to handle the reassignment case separately
-  const handleSendTestWithReassignment = async (candidate) => {
-    console.log("Starting handleSendTest for candidate:", candidate._id);
-
-    const matchingQuiz = quizzes.find(
-      (q) =>
-        q.category.toLowerCase() === candidate.tech.toLowerCase() &&
-        q.difficulty.toLowerCase() === candidate.difficulty.toLowerCase()
-    );
-
-    if (!matchingQuiz) {
-      alert(`No quiz found for ${candidate.tech} - ${candidate.difficulty}`);
-      return;
-    }
-
-    if (
-      !window.confirm(
-        `Are you sure you want to send the ${matchingQuiz.title} test to ${candidate.name} ${candidate.lname}?`
-      )
-    ) {
-      return;
-    }
-
-    setSending(true);
-    setIsDisabled(true);
-
-    try {
-      // First try POST (assign quiz)
-      try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}`,
-          {
-            quizId: matchingQuiz._id,
-            title: matchingQuiz.title,
-            Email:matchingQuiz.Email,
-          }
-        );
-
-        console.log("New assignment created:", response.data);
-        alert(response.data.message || "Quiz assigned successfully!");
-      } catch (postError) {
-        // If assignment already exists, try to update it
-        if (postError.response?.status === 200) {
-          // The POST actually succeeded but returned existing assignment
-          alert(
-            postError.response.data.message || "Quiz reassigned successfully!"
-          );
-        } else {
-          // Try PATCH for reassignment
-          console.log("POST failed, trying PATCH for reassignment...");
-          const patchResponse = await axios.patch(
-            `${process.env.REACT_APP_API_URL}/api/assign/${candidate._id}/${matchingQuiz._id}`
-          );
-
-          console.log("Reassignment successful:", patchResponse.data);
-          alert(patchResponse.data.message || "Quiz reassigned successfully!");
-        }
-      }
-
-      setEditingCandidate(null);
-    } catch (error) {
-      console.error("Assignment/reassignment error:", error);
-
-      if (error.response) {
-        alert(
-          `Error: ${error.response.data?.message || "Server error occurred"}`
-        );
-      } else {
-        alert("Network error. Please check your connection and try again.");
-      }
-    } finally {
-      setSending(false);
-      setTimeout(() => setIsDisabled(false), 10 * 1000);
-    }
-  };
-
   return (
     <div>
       <div className="candidate-page">
@@ -591,27 +515,6 @@ const AdminCandidatePage = () => {
                     </>
                   )}
                 </div>
-
-                {/* <div className="modal-actions">
-                  {sending ? (
-                    <div className="loader"></div>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => handleSendTest(editingCandidate)}
-                        disabled={isDisabled}
-                      >
-                        <SendIcon />{" "}
-                        {isDisabled ? "Please wait..." : "Send Test"}
-                      </button>
-
-                      <button onClick={handleUpdateCandidate}>Save</button>
-                      <button onClick={() => setEditingCandidate(null)}>
-                        Exit
-                      </button>
-                    </>
-                  )}
-                </div> */}
               </div>
             </div>
           )}

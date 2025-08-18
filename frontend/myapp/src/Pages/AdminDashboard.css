@@ -57,7 +57,7 @@
 }
 
 .logout-btn {
-  background: #635f6b;
+  background: #333;
   color: #fff;
 }
 
@@ -94,7 +94,7 @@
 
 .quiz-list h2 {
   margin-bottom: 4px;
-  font-size: 16px;
+  font-size: 22px;
 }
 
 .subtitle {
@@ -202,7 +202,7 @@ tr:nth-child(even) {
 .manage-btn,
 .results-btn,
 .deletes-btn {
-  font-size: 12px;
+  font-size: 16px;
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -228,7 +228,7 @@ button svg {
     width: 100%;
     margin: 3px 0;
     text-align: center;
-    font-size: 13px;
+    font-size: 12px;
     padding: 8px 12px;
   }
   
@@ -242,12 +242,12 @@ button svg {
   }
   
   tbody td:last-child button:first-child {
-    background: #2563eb;
+    background: #333;
     color: white;
   }
   
   tbody td:last-child button:last-child {
-    background: #dc2626;
+    background:#7f1d1d ;
     color: white;
   }
 }
@@ -284,7 +284,7 @@ button svg {
   color: #090909;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -318,7 +318,7 @@ button svg {
   }
 
   .dashboard-header h1 {
-    font-size: 22px;
+    font-size: 18px;
     padding-left: 0; /* Remove left padding on larger screens */
   }
 
@@ -328,7 +328,7 @@ button svg {
 
   .header-buttons button {
     padding: 8px 16px;
-    font-size: 14px;
+    font-size: 12px;
     flex: none; /* Remove equal width on tablet+ */
   }
 
@@ -348,7 +348,7 @@ button svg {
   }
 
   .card strong {
-    font-size: 18px;
+    font-size: 12px;
   }
 
   .quiz-list {
@@ -356,13 +356,13 @@ button svg {
   }
 
   .quiz-list h2 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   /* Reset table styles for larger screens */
   table {
     display: table;
-    font-size: 13px;
+    font-size: 12px;
   }
   
   thead {
@@ -404,7 +404,7 @@ button svg {
   }
 
   .dashboard-header h1 {
-    font-size: 28px;
+    font-size: 22px;
   }
 
   .header-buttons button {

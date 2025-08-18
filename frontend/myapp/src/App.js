@@ -30,7 +30,9 @@ function App() {
       <CreateQuizpage/>
       </Layout>
       } />
-      <Route path="/quiz/:candidateId" element={<CandidateQuizpage />} />
+       <Route path="/quiz/:candidateId" element={<CandidateQuizpage />} /> 
+     <Route path="/quiz/:token" element={<CandidateQuizpage />} />
+
       {/* <Route path="/quiz/:token" element={<CandidateQuizpage/>}/> */}
       <Route path="/thank-you" element={
         <ThankYouPage />} />

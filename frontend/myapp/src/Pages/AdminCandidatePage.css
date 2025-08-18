@@ -12,7 +12,7 @@
 }
 
 .main-title {
-  font-size: 1.8rem;
+  font-size: 22px;
   font-weight: 600;
   margin-bottom: 1.5rem;
   color: #333;
@@ -20,7 +20,7 @@
 
 .add-candidate-section {
   background: #fff;
-  padding: 1.5rem;
+  padding: 15px;
   margin-bottom: 2rem;
   border-radius: 0.75rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -28,7 +28,7 @@
 
 .add-candidate-section h2 {
   margin-bottom: 1rem;
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #222;
 }
 
@@ -44,7 +44,7 @@
   padding: 0.5rem 0.75rem;
   border: 1px solid #d1d5db;
   border-radius: 0.5rem;
-  font-size: 0.95rem;
+  font-size: 16px;
 }
 
 .add-btn {
@@ -74,7 +74,7 @@
 
 .candidate-list h2 {
   margin-bottom: 1rem;
-  font-size: 1.4rem;
+  font-size: 16px;
 }
 
 table {
@@ -91,7 +91,8 @@ th,
 td {
   text-align: left;
   padding: 0.75rem;
-  font-size: 0.95rem;
+
+  font-size: 16px;
 }
 
 tbody tr:nth-child(even) {
@@ -139,7 +140,7 @@ td button:hover svg {
 
 .modal-content h3 {
   margin-bottom: 1rem;
-  font-size: 1.3rem;
+  font-size: 16px;
 }
 
 .modal-content input,
@@ -161,7 +162,7 @@ td button:hover svg {
 .modal-actions button {
   padding: 0.4rem 0.8rem;
   border-radius: 0.4rem;
-  font-size: 0.9rem;
+  font-size: 16px;
   cursor: pointer;
   border: none;
   white-space: nowrap;

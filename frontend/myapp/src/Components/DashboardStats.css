@@ -27,13 +27,13 @@
 }
 
 .stat-box h3 {
-  font-size: 1.2rem;
+  font-size: 16px;
   margin-bottom: 10px;
   color: #333333;
 }
 
 .stat-box p {
-  font-size: 2rem;
+  font-size: 16px;
   font-weight: bold;
   color: #007bff; /* blue, change as needed */
   margin: 0;

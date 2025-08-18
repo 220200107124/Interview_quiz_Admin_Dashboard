@@ -1,5 +1,6 @@
 const express = require("express");
 const Candidate = require("../models/candidate");
+const sendMail = require("../email");
 const router = express.Router();
 
 // GET all candidates
@@ -81,43 +82,30 @@ router.get("/:id", async (req, res) => {
 
 //   res.json({ message: "Email sent successfully" });
 // });
-router.post("/send-test/:candidateId", async (req, res) => {
 
+router.post("/send-test/:candidateId", async (req, res) => {
   try {
     const candidate = await Candidate.findById(req.params.candidateId);
     if (!candidate)
       return res.status(404).json({ message: "Candidate not found" });
-    console.log("candidate not found ")
 
-    // Find the assignment that was created for this candidate
-    const assignment = await assignment.findOne({ candidateId: candidate._id });
+    // Find assignment for this candidate
+    const assignment = await Assignment.findOne({ candidateId: candidate._id });
     if (!assignment)
       return res.status(404).json({ message: "Assignment not found for candidate" });
-    console.log("assignment not found for candidate")
 
-
-    // Use the token from assignment a
     const quizLink = `http://localhost:3000/quiz/${assignment.token}`;
 
-    console.log("node emaile is start from here");
-    // Send email using nodemailer
-    const nodemailer = require("nodemailer");
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: EMAIL_USER,
-        pass: EMAIL_PASS //  app password 
-      },
-    });
-    console.log(EMAIL_PASS);
-    console.log(EMAIL_USER);
-
-    await transporter.sendMail({
-      from: "reenatanchak@gmail.com",
-      to: candidate.email,
-      subject: "Your quiz link",
-      text: `Hi ${candidate.name},\n\nPlease take your quiz using this link:\n${quizLink}\n\nGood luck!`,
-    });
+    // Use common sendMail function
+    await sendMail(
+      candidate.email,
+      "Your Quiz Link",
+      `Hi ${candidate.name},\n\nPlease take your quiz using this link:\n${quizLink}\n\nGood luck!`,
+      `<p>Hi <b>${candidate.name}</b>,</p>
+       <p>Please take your quiz using this link:</p>
+       <a href="${quizLink}">${quizLink}</a>
+       <p><i>Good luck!</i></p>`
+    );
 
     res.json({ message: "Email sent successfully", quizLink });
   } catch (error) {
@@ -125,5 +113,53 @@ router.post("/send-test/:candidateId", async (req, res) => {
     res.status(500).json({ message: "Failed to send email", error: error.message });
   }
 });
+
+
+
+
+// router.post("/send-test/:candidateId", async (req, res) => {
+
+//   try {
+//     const candidate = await Candidate.findById(req.params.candidateId);
+//     if (!candidate)
+//       return res.status(404).json({ message: "Candidate not found" });
+//     console.log("candidate not found ")
+
+//     // Find the assignment that was created for this candidate
+//     const assignment = await assignment.findOne({ candidateId: candidate._id });
+//     if (!assignment)
+//       return res.status(404).json({ message: "Assignment not found for candidate" });
+//     console.log("assignment not found for candidate")
+
+
+//     // Use the token from assignment a
+//     const quizLink = `http://localhost:3000/quiz/${assignment.token}`;
+
+//     console.log("node emaile is start from here");
+//     // Send email using nodemailer
+//     const nodemailer = require("nodemailer");
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: EMAIL_USER,
+//         pass: EMAIL_PASS //  app password 
+//       },
+//     });
+//     console.log(EMAIL_PASS);
+//     console.log(EMAIL_USER);
+
+//     await transporter.sendMail({
+//       from: "reenatanchak@gmail.com",
+//       to: candidate.email,
+//       subject: "Your quiz link",
+//       text: `Hi ${candidate.name},\n\nPlease take your quiz using this link:\n${quizLink}\n\nGood luck!`,
+//     });
+
+//     res.json({ message: "Email sent successfully", quizLink });
+//   } catch (error) {
+//     console.error("Error sending quiz link:", error);
+//     res.status(500).json({ message: "Failed to send email", error: error.message });
+//   }
+// });
 
 module.exports = router;

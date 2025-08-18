@@ -1,22 +1,32 @@
-let nodemailer = require("nodemailer");
-let transporter = nodemailer.createTransport({
+const nodemailer = require("nodemailer");
+
+// Create reusable transporter
+const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "reenatanchak@gmail.com",
-    pass: "anar rnaa rouw uwxn",
+    user: "reenatanchak@gmail.com", // your Gmail
+    pass: "anar rnaa rouw uwxn",   // your App Password (not Gmail password)
   },
 });
-let mailOptions = {
-  from: "reenatanchak@gmail.com",
-  to: "reenatanchak@gmail.com",
-  subject: "sending mail using node emailer",
-  text: "this is test mail from node emailer",
+
+
+const sendMail = async (to, subject, text, html = null) => {
+  try {
+    const mailOptions = {
+      from: "reenatanchak@gmail.com",
+      to,
+      subject,
+      text,
+      ...(html && { html }), // add html only if provided
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("✅ Email sent: " + info.response);
+    return info;
+  } catch (error) {
+    console.error("❌ Error sending email:", error);
+    throw error;
+  }
 };
 
-transporter.sendMail(mailOptions, function (error, info) {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("email sent:" + info.response);
-  }
-});
+module.exports = sendMail;

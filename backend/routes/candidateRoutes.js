@@ -1,6 +1,8 @@
 const express = require("express");
 const Candidate = require("../models/candidate");
 const sendMail = require("../email");
+const Assignment = require("../models/Assignment");
+const candidate = require("../models/candidate");
 const router = express.Router();
 
 // GET all candidates
@@ -85,7 +87,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/send-test/:candidateId", async (req, res) => {
   try {
-    const candidate = await Candidate.findById(req.params.candidateId);
+    const candidate = await candidate.findById(req.params.candidateId);
     if (!candidate)
       return res.status(404).json({ message: "Candidate not found" });
 

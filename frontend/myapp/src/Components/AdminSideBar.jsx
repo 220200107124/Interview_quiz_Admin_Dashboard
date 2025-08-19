@@ -19,8 +19,13 @@ function AdminSideBar() {
   // };
 
   return (
-    <div className="dashboard-wrapper">
+    <>
       {/* Sidebar  */}
+      <div>
+        <button className="toggle-btn" onClick={toggleSidebar}>
+          ☰
+        </button>
+      </div>
       <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <h2 className="sidebar-title">Questify</h2>
@@ -57,12 +62,7 @@ function AdminSideBar() {
       </aside>
 
       {/* Main content (placeholder) */}
-      <div >
-        <button className="toggle-btn" onClick={toggleSidebar}>
-          ☰
-        </button>
-      </div>
-    </div>
+    </>
   );
 }
 

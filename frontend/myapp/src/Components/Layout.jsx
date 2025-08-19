@@ -6,13 +6,12 @@ import "./Footer.css";
 
 const Layout = ({children}) => {
   return (
+
     <div  className="dashboard-wrapper">
       <AdminSideBar />
-  
-      
-    
       <main  className="dashboard-container">
         <header className="dashboard-header">
+        
         <Header/>
         </header> 
         <div className="stats-cards">

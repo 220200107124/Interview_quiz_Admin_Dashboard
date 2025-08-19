@@ -69,7 +69,7 @@ button:hover {
   gap: 10px;
 }
 
-.close-btn {
+/* .close-btn {
   background: #131414;
   color: white;
   border: none;
@@ -81,7 +81,7 @@ button:hover {
 .back-btn:hover,
 .close-btn:hover {
   background: #1d4ed8;
-}
+} */
 
 /* 📱 Mobile (≤768px) */
 @media screen and (max-width: 768px) {
@@ -118,7 +118,7 @@ button:hover {
   }
 }
 
-/* 💻 Desktop (≥769px) */
+/* Desktop (≥769px) */
 @media screen and (min-width: 769px) {
   .candidate-detail-page {
     max-width: 800px;

@@ -1,13 +1,8 @@
-/* Base styles */
-* {
+/* Base styles
+ {
   box-sizing: border-box;
-}
+} */
 
-.dashboard-wrapper {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: row; /* Keep horizontal layout even on mobile */
-}
 
 .dashboard-container {
   padding: 16px;
@@ -31,25 +26,26 @@
   font-size: 18px; /* Smaller on mobile */
   color: #2563eb;
   margin: 0;
-  padding-left: 10px; /* Add left padding to avoid toggle overlap */
+  padding-left:25px; /* Add left padding to avoid toggle overlap */
 }
 
 .header-buttons {
   display: flex;
-  gap: 8px;
+  gap: 10px;
+  align-items: center;
   flex-wrap: wrap;
   padding-left: 10px; /* Add left padding to avoid toggle overlap */
 }
-
 .header-buttons button {
-  padding: 6px 12px; /* Smaller padding on mobile */
+  display: inline-block;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 12px; /* Smaller font on mobile */
-  flex: 1; /* Buttons take equal width on mobile */
-  min-width: 80px;
+  font-size: 12px;
+  white-space: nowrap; /* Prevents text wrapping */
 }
+
 
 .creates-btn {
   background: #2563eb;

@@ -225,7 +225,7 @@ const CandidateQuizPage = () => {
   if (!candidate) return <div>Candidate not found</div>;
 
   return (
-    <div className="dashboard-wrapper">
+    
       <div className="candidate-quiz-container">
         <h1>Candidate Quiz Dashboard</h1>
 
@@ -276,7 +276,7 @@ const CandidateQuizPage = () => {
           {submitted ? 'Submitted' : 'Submit All Answers'}
         </button>
       </div>
-    </div>
+    
   );
 };
 

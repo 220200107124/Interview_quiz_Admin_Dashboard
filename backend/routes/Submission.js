@@ -104,7 +104,7 @@ router.post("/", async (req, res) => {
       candidateName,
       candidateEmail,
       quizTitle: quiz.title,
-      technology: quiz.tech || "NOT Define",
+      technology: quiz.technology || "NOT Define",
       score: correctAnswers,
       totalQuestions: totalQuestions,
       percentage: percentage,
@@ -273,7 +273,7 @@ router.post("/", async (req, res) => {
 // });
 
 // GET /api/submit-quiz/result/:resultId - Get submission result
-router.get("/:resultId", async (req, res) => {
+router.get("/result/:resultId", async (req, res) => {
   try {
     const result = await Result.findById(req.params.resultId);
     if (!result) {

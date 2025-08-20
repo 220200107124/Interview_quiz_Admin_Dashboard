@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-// import AdminSideBar from "../Components/AdminSideBar";
-// import DashboardStats from "../Components/DashboardStats";
-// import Footer from "../Components/Footer";
+
 import "./AdminDashboard.css";
 
 function AdminDashboard() {

@@ -35,24 +35,34 @@ function AdminSideBar() {
         </div>
         <nav className="sidebar-nav">
           <button onClick={() => handleNavigate("/admin")}>Dashboard</button>
-          <button onClick={() => handleNavigate("/create-quiz")}>
-            Create Quiz
-          </button>
-          <button onClick={() => handleNavigate("/admin-candidate")}>
+           <button onClick={() => handleNavigate("/admin-candidate")}>
             Candidates
           </button>
+          <button onClick={() => handleNavigate("/create-quiz")}>
+
+            +Quiz
+          </button>
+          {/* <button onClick={() => handleNavigate("/admin-candidate")}>
+            Candidates
+          </button> */}
           <button onClick={() => handleNavigate("/admin-result")}>
             Results
           </button>
-          <button onClick={() => handleNavigate("/quiz/:candidateId")}>
+          {/* <button onClick={() => handleNavigate("/quiz/:candidateId")}>
             {" "}
             CandidateQuizPage
-          </button>
+          </button> */}
           <button
             onClick={() => {
+
               if (window.confirm("Are you sure you want to logout?")) {
-                // Redirect or call logout function
-                window.location.href = "/admin";
+                
+              localStorage.clear()
+                  navigate("/admin-login");
+
+              }
+              else{
+                navigate("/admin");
               }
             }}
           >

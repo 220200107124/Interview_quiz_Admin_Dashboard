@@ -68,6 +68,7 @@ th {
   margin-top: 10px;
   cursor: pointer;
   border-radius: 4px;
+  width: auto;
 }
 
 .close-btn:hover,

@@ -6,7 +6,7 @@
 
 .dashboard-wrapper {
   display: flex;
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 /* Sidebar base */
@@ -81,6 +81,7 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 4px;
+  width: auto;
 }
 
 /* Close btn inside sidebar */
@@ -90,6 +91,7 @@
   border: none;
   font-size: 22px;
   cursor: pointer;
+  width: auto;
 }
 
 /* Content area pushes sidebar aside on desktop */

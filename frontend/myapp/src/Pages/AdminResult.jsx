@@ -47,6 +47,7 @@ function AdminResult() {
               totalScore: 0,
               attemptsData: [],
             };
+            console.log("technology", r.technology);
           }
           summary[key].attempts += 1;
           summary[key].totalScore += r.score;
@@ -77,8 +78,7 @@ function AdminResult() {
     quizTitle: candidateSummary[key].quizTitle,
     averageScore:
       candidateSummary[key].totalScore / candidateSummary[key].attempts,
-    fill:
-      candidateSummary[key].totalScore > 0 ? "#82ca9d" : "#8884d8",
+    fill: candidateSummary[key].totalScore > 0 ? "#82ca9d" : "#8884d8",
   }));
 
   // Latest attempt for each quiz per candidate
@@ -168,7 +168,10 @@ function AdminResult() {
                           <button
                             className="view-btn"
                             onClick={() =>
-                              setSelectedCandidate(r.candidateName)
+                              setSelectedCandidate({
+                                id: r.candidateId, //  this must exist in your Result schema
+                                name: r.candidateName,
+                              })
                             }
                           >
                             View Detail
@@ -185,15 +188,16 @@ function AdminResult() {
       </main>
       {/* <Footer /> */}
 
-      {selectedCandidate && (
-        <CandidateModal
-          candidateName={selectedCandidate}
-          details={Object.values(candidateSummary).filter(
-            (q) => q.candidateName === selectedCandidate
-          )}
-          onClose={() => setSelectedCandidate(null)}
-        />
-      )}
+  {selectedCandidate && (
+  <CandidateModal
+    candidateId={selectedCandidate.id}
+    candidateName={selectedCandidate.name}
+    onClose={() => setSelectedCandidate(null)}
+    
+  />
+
+)}
+
     </>
   );
 }

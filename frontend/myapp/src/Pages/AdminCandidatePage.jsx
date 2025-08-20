@@ -219,6 +219,7 @@ const AdminCandidatePage = () => {
         {
           quizId: matchingQuiz._id,
           title: matchingQuiz.title,
+          tech:matchingQuiz.tech,
          
         },
         {

@@ -1,8 +1,7 @@
-/* Base styles
+ Base styles
  {
   box-sizing: border-box;
-} */
-
+ }
 
 .dashboard-container {
   padding: 16px;
@@ -26,7 +25,7 @@
   font-size: 18px; /* Smaller on mobile */
   color: #2563eb;
   margin: 0;
-  padding-left:25px; /* Add left padding to avoid toggle overlap */
+  padding-left:7px; /* Add left padding to avoid toggle overlap */
 }
 
 .header-buttons {
@@ -34,7 +33,7 @@
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
-  padding-left: 10px; /* Add left padding to avoid toggle overlap */
+  padding-left: 7px; /* Add left padding to avoid toggle overlap */
 }
 .header-buttons button {
   display: inline-block;

@@ -70,13 +70,10 @@ const CandidateQuizPage = () => {
           candidateId: candidate?._id,
           candidateName: candidate.name || '',
           candidateEmail: candidate.email || '',
-          technology: candidate.tech,
+          technology: quizzes.tech,
           answers: quizzes.map((_, index) => selectedAnswers[index]), // all answers
         }
-       
       );
-       console.log(res);
-       console.log(candidate.tech);
 
       setSubmitted(true);
       setMessage({ type: 'success', text: res.data.message || ' Quiz submitted successfully!' });
@@ -104,10 +101,9 @@ if (err.response?.status === 400 && err.response?.data?.error?.includes("already
       <div className="candidate-quiz-container">
         <h1>Candidate Quiz Dashboard</h1>
 
-        <p><strong>Name:</strong> {candidate?.name} {candidate.lname || ''}</p>
-        <p><strong>Email:</strong> {candidate?.email}</p>
-       <p><strong>Tech:</strong> {candidate?.tech || ''}</p>
-
+        <p><strong>Name:</strong> {candidate.name} {candidate.lname || ''}</p>
+        <p><strong>Email:</strong> {candidate.email}</p>
+        <p><strong>Tech:</strong> {candidate.tech}</p>
         <p><strong>Difficulty:</strong> {candidate.difficulty}</p>
 
         {/*  Show messages */}

@@ -37,6 +37,6 @@ const candidateSchema = new mongoose.Schema(
 );
 
 // Add a  index to make (tech + difficulty) unique:
-candidateSchema.index({ tech: 1, difficulty: 1 }, { unique: true });
+// candidateSchema.index({ tech: 1, difficulty: 1 }, { unique: true });
 
 module.exports = mongoose.model("Candidate", candidateSchema);

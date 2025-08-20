@@ -1,23 +1,24 @@
-
-// 
+//
 const express = require("express");
 const router = express.Router();
-
 const Submission = require("../models/Submission");
 const Result = require("../models/result");
 const Quiz = require("../models/quizzes");
 const Assignment = require("../models/Assignment");
 
-
-
-
-
 // POST /api/submit-quiz
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   console.log("=== SUBMIT QUIZ ROUTE START ===");
   try {
-    const { assignmentId, candidateId, candidateName, candidateEmail, answers } = req.body;
+    const {
+      assignmentId,
+      candidateId,
+      candidateName,
+      candidateEmail,
+      technology,
+      answers,
+    } = req.body;
 
     console.log("Request body:", req.body);
 
@@ -33,14 +34,18 @@ router.post('/', async (req, res) => {
     console.log("Basic validation passed");
     console.log("Looking for assignment with ID:", assignmentId);
 
-    const assignment = await Assignment.findOne({ _id: assignmentId }).populate('quizId');
+    const assignment = await Assignment.findOne({ _id: assignmentId }).populate(
+      "quizId"
+    );
 
     if (!assignment) {
       return res.status(404).json({ error: "Assignment not found" });
     }
 
-    if (assignment.status === 'completed') {
-      return res.status(400).json({ error: "This assignment has already been completed" });
+    if (assignment.status === "completed") {
+      return res
+        .status(400)
+        .json({ error: "This assignment has already been completed" });
     }
 
     const quiz = assignment.quizId;
@@ -48,7 +53,10 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ error: "Quiz not found in assignment" });
     }
 
-    console.log("Quiz found:", { title: quiz.title, questionsCount: quiz.questions?.length });
+    console.log("Quiz found:", {
+      title: quiz.title,
+      questionsCount: quiz.questions?.length,
+    });
 
     let correctAnswers = 0;
     const totalQuestions = quiz.questions?.length || 0;
@@ -64,22 +72,28 @@ router.post('/', async (req, res) => {
         }
         return {
           questionIndex: index,
-          selectedOption: userAnswer
+          selectedOption: userAnswer,
         };
       }
       return { questionIndex: index, selectedOption: String(answer) };
     });
 
-    const percentage = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
+    const percentage =
+      totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
 
-    console.log(`Score calculated: ${correctAnswers}/${totalQuestions} = ${percentage.toFixed(1)}%`);
+    console.log(
+      `Score calculated: ${correctAnswers}/${totalQuestions} = ${percentage.toFixed(
+        1
+      )}%`
+    );
 
     // Save Submission
     const submission = new Submission({
       assignment: assignment._id, // matches schema
       candidate: candidateId, // matches schema
       answers: formattedAnswers,
-      submittedAt: new Date()
+      submittedAt: new Date(),
+      technology,
     });
 
     await submission.save();
@@ -90,20 +104,20 @@ router.post('/', async (req, res) => {
       candidateName,
       candidateEmail,
       quizTitle: quiz.title,
-      technology: quiz.technology || "N/A",
+      technology: quiz.tech || "NOT Define",
       score: correctAnswers,
       totalQuestions: totalQuestions,
       percentage: percentage,
       attempts: 1,
       status: "submitted",
-      date: new Date()
+      date: new Date(),
     });
 
     await result.save();
     console.log("Result saved:", result._id);
 
     // Update assignment status
-    assignment.status = 'completed';
+    assignment.status = "completed";
     assignment.completedAt = new Date();
     if (!assignment.startedAt) {
       assignment.startedAt = new Date();
@@ -117,18 +131,16 @@ router.post('/', async (req, res) => {
       score: `${correctAnswers}/${totalQuestions} (${percentage.toFixed(1)}%)`,
       submissionId: submission._id,
       resultId: result._id,
-      assignmentId: assignment._id
+      assignmentId: assignment._id,
     });
-
   } catch (err) {
     console.error("Submit quiz error:", err);
     return res.status(500).json({
       error: "Server error",
-      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      details: process.env.NODE_ENV === "development" ? err.message : undefined,
     });
   }
 });
-
 
 // router.post('/', async (req, res) => {
 //   console.log("=== SUBMIT QUIZ ROUTE START ===");
@@ -153,10 +165,10 @@ router.post('/', async (req, res) => {
 
 //     // Find the assignment and populate quiz details
 //     const assignment = await Assignment.findById(assignmentId).populate('quizId');
-    
+
 //     if (!assignment) {
 //       console.log("Assignment not found");
-      
+
 //       // Debug: Show all assignments for this candidate
 //       const candidateAssignments = await Assignment.find({ candidateId });
 //       console.log("All assignments for candidate:", candidateAssignments.map(a => ({
@@ -166,8 +178,8 @@ router.post('/', async (req, res) => {
 //         status: a.status,
 //         token: a.token
 //       })));
-      
-//       return res.status(404).json({ 
+
+//       return res.status(404).json({
 //         error: "Assignment not found",
 //         debugInfo: {
 //           searchedAssignmentId: assignmentId,
@@ -207,7 +219,7 @@ router.post('/', async (req, res) => {
 //           // Handle both string and number answers
 //           const userAnswer = typeof answer === 'string' ? answer : String(answer);
 //           const correctAnswer = String(question.correctAnswer);
-          
+
 //           if (userAnswer === correctAnswer) {
 //             correctAnswers++;
 //           }
@@ -244,7 +256,7 @@ router.post('/', async (req, res) => {
 
 //     console.log("Assignment status updated to completed");
 
-//     return res.status(200).json({ 
+//     return res.status(200).json({
 //       message: "Quiz submitted successfully!",
 //       score: `${correctAnswers}/${totalQuestions} (${score.toFixed(1)}%)`,
 //       submissionId: submission._id,
@@ -253,18 +265,15 @@ router.post('/', async (req, res) => {
 
 //   } catch (err) {
 //     console.error("Submit quiz error:", err);
-//     return res.status(500).json({ 
-//       error: "Server error", 
-//       details: process.env.NODE_ENV === 'development' ? err.message : undefined 
+//     return res.status(500).json({
+//       error: "Server error",
+//       details: process.env.NODE_ENV === 'development' ? err.message : undefined
 //     });
 //   }
 // });
 
-
-
-
 // GET /api/submit-quiz/result/:resultId - Get submission result
-router.get("/result/:resultId", async (req, res) => {
+router.get("/:resultId", async (req, res) => {
   try {
     const result = await Result.findById(req.params.resultId);
     if (!result) {

@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bodyparser=require("body-parser");
 const candidateRoutes = require("./routes/candidateRoutes");
 const AdminCreateQuizs = require("./routes/quizzesRoutes");
 const assignQuizRouter = require("./routes/assignQuiz");
@@ -10,6 +11,7 @@ const quizByCandidateRouter = require("./routes/quizByCandidate");
 const submitQuizRouter = require("./routes/Submission");
 const States=require("./routes/State");
 const assignment =require("./routes/assignments");
+const LoginAuth=require("./routes/admin_auth");
 
 // const updateAssignmentRouter=require("./routes/updateAssignment")
 
@@ -20,6 +22,7 @@ const Quiz = require("./models/candidate");
 const Result = require("./models/result");
 const Submission = require("./models/Submission");
 const Assignment=require("./models/Assignment");
+const createSuperAdmin = require("./utils/initSuperAdmin");
 
 
 
@@ -27,6 +30,7 @@ const Assignment=require("./models/Assignment");
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(bodyparser.json());
 
 
 
@@ -36,7 +40,12 @@ mongoose
   .connect(process.env.MONGO_URI, {
  
   })
-  .then(() => console.log("MongoDB connected"))
+  .then(() =>{ console.log("MongoDB connected")
+  createSuperAdmin();
+
+
+
+  })
   .catch((err) => console.error("MongoDB error:", err));
 
 
@@ -76,7 +85,7 @@ mongoose
 
 
 //api routes
-
+app.use("/api/admin",LoginAuth);
 app.use("/api/candidates", candidateRoutes);
 app.use("/api/quizzes", AdminCreateQuizs);
 app.use("/api/assign", assignQuizRouter);

@@ -56,42 +56,49 @@ const CandidateQuizPage = () => {
     }));
   };
 
-  const handleSubmitAll = async () => {
-    if (Object.keys(selectedAnswers).length !== quizzes.length) {
-      setMessage({ type: 'error', text: 'Please answer all questions before submitting!' });
-      return;
-    }
+//   
+const handleSubmitAll = async () => {
+  if (Object.keys(selectedAnswers).length !== quizzes.length) {
+    setMessage({ type: 'error', text: 'Please answer all questions before submitting!' });
+    return;
+  }
 
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/submit-quiz`,
-        {
-          assignmentId,
-          candidateId: candidate?._id,
-          candidateName: candidate.name || '',
-          candidateEmail: candidate.email || '',
-          technology: quizzes.tech,
-          answers: quizzes.map((_, index) => selectedAnswers[index]), // all answers
-        }
-      );
+  // Prepare answers in correct format
+  const formattedAnswers = quizzes.map((q, index) => ({
+    questionId: q._id,                // assuming your backend stores _id for each question
+    answer: q.options[selectedAnswers[index]] // store actual option, not just index
+  }));
 
-      setSubmitted(true);
-      setMessage({ type: 'success', text: res.data.message || ' Quiz submitted successfully!' });
-
-      // Optionally redirect after few seconds
-      setTimeout(() => navigate('/thank-you'), 2000);
-
-    } catch (err) {
-      console.error('Submission error:', err);
-if (err.response?.status === 400 && err.response?.data?.error?.includes("already")) {
-  setMessage({ type: 'info', text: 'i  You have already submitted this quiz.' });
-  setSubmitted(true);
-}
- else {
-        setMessage({ type: 'error', text: ' Error submitting quiz, please try again.' });
+  try {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/api/submit-quiz`,
+      {
+        assignmentId,               // from API
+        candidateId,                // from useParams() — this matches backend expectation
+        candidateName: candidate.name || '',
+        candidateEmail: candidate.email || '',
+        technology: candidate.tech || '',   // safer source than quizzes.tech
+        answers: formattedAnswers
       }
+    );
+
+    setSubmitted(true);
+    setMessage({ type: 'success', text: res.data.message || 'Quiz submitted successfully!' });
+
+    // Redirect after 2s
+    setTimeout(() => navigate('/thank-you'), 2000);
+
+  } catch (err) {
+    console.error('Submission error:', err);
+    if (err.response?.status === 400 && err.response?.data?.error?.includes("already")) {
+      setMessage({ type: 'info', text: 'You have already submitted this quiz.' });
+      setSubmitted(true);
+    } else {
+      setMessage({ type: 'error', text: 'Error submitting quiz, please try again.' });
     }
-  };
+  }
+};
+
 
   if (loading) return <div>Loading...</div>;
   if (!candidate) return <div>Candidate not found</div>;

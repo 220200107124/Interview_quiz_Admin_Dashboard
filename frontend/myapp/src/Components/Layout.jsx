@@ -32,10 +32,13 @@ const navigate = useNavigate()
        
 
         {children}
-          <> 
-    <Footer/>
-    </> 
+          
+    
+  
+     <Footer/>
       </main>
+     
+     
     
     </div>
     

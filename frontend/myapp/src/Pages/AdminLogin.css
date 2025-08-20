@@ -9,7 +9,8 @@
   display: flex;
   justify-content: center;
   background-color: #f9fafb;
-  color: #101010;
+  color: #f4f0f0;
+  align-items: center;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .admin-login-box {

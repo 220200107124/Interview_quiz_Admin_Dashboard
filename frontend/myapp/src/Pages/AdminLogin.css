@@ -9,7 +9,7 @@
   display: flex;
   justify-content: center;
   background-color: #f9fafb;
-  color: #f4f0f0;
+  color: #090909;
   align-items: center;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -67,7 +67,7 @@
   padding: 10px;
   border: none;
   background: linear-gradient(to right, #2563eb, #2862df);
-  color: black;
+  color: rgb(255, 255, 255);
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;

@@ -82,6 +82,7 @@
   cursor: pointer;
   border-radius: 4px;
   width: auto;
+  position: relative;
 }
 
 /* Close btn inside sidebar */

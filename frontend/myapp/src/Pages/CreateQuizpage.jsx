@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './CreateQuiz.css';
-import AdminSideBar from '../Components/AdminSideBar';
+
 import {quizAPI}from '../Services/api';
 
 
@@ -428,7 +428,7 @@ const CreateQuizpage = () => {
   if (loading) {
     return (
       <div className="quiz-management-app">
-        <AdminSideBar/>
+        
         <div className="container">
           <div className="loading-state">
             <h2>Loading quizzes...</h2>

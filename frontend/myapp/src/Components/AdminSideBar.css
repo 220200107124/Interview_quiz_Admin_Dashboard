@@ -83,6 +83,7 @@
   border-radius: 4px;
   width: auto;
   position: absolute;
+  z-index: 9;
 }
 
 /* Close btn inside sidebar */

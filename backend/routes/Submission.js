@@ -7,6 +7,7 @@ const Submission = require("../models/Submission");
 const Result = require("../models/result");
 const Quiz = require("../models/quizzes");
 const Assignment = require("../models/Assignment");
+const candidate = require("../models/candidate");
 
 
 // router.post("/", async (req, res) => {
@@ -331,22 +332,43 @@ if (!mongoose.Types.ObjectId.isValid(candidateId)) {
     const totalQuestions = quiz.questions?.length || 0;
 
     // Format answers for Submission schema
-    const formattedAnswers = answers.map((answer, index) => {
-      const question = quiz.questions[index];
-      if (question) {
-        const userAnswer = String(answer);
-        const correctAnswer = String(question.correctAnswer);
-        if (userAnswer === correctAnswer) {
-          correctAnswers++;
-        }
-        return {
-          questionIndex: index,
-          selectedOption: userAnswer
-        };
-      }
-      return { questionIndex: index, selectedOption: String(answer) };
-    });
+    // const formattedAnswers = answers.map((answer, index) => {
+    //   const question = quiz.questions[index];
+    //   if (question) {
+    //     const userAnswer = String(answer);
+    //     const correctAnswer = String(question.correctAnswer);
+    //     if (userAnswer === correctAnswer) {
+    //       correctAnswers++;
+    //     }
+    //     return {
+    //       questionIndex: index,
+    //       selectedOption: userAnswer
+    //     };
+    //   }
+    //   return { questionIndex: index, selectedOption: String(answer) };
+    // });
+    // Format answers for Submission schema
+const formattedAnswers = answers.map((answer, index) => {
+  const question = quiz.questions[index];
+  if (question) {
+    // if frontend sends object like { selectedOption: 2 }
+    const selectedOption = Number(answer.selectedOption ?? answer);
+    console.log(  "answer" ,answer.selectedOption)
+   
+    if (question.correctAnswer === selectedOption) {
+      correctAnswers++; 
+    }
+ 
+    return {
+      questionIndex: index,
+      selectedOption,  // <-- stored as number in DB
+    };
+    
+  }
+  return { questionIndex: index, selectedOption: Number(answer.selectedOption ?? answer) };
+});
 
+console.log()
     const percentage = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
 
     console.log(`Score calculated: ${correctAnswers}/${totalQuestions} = ${percentage.toFixed(1)}%`);
@@ -359,6 +381,7 @@ if (!mongoose.Types.ObjectId.isValid(candidateId)) {
       submittedAt: new Date()
     });
 
+
     await submission.save();
     console.log("Submission saved:", submission._id);
 
@@ -368,7 +391,7 @@ if (!mongoose.Types.ObjectId.isValid(candidateId)) {
       candidateId,
       candidateEmail,
       quizTitle: quiz.title,
-      technology: quiz.technology || "N/A",
+      tech: quiz.tech || "N/A",
       score: correctAnswers,
       totalQuestions: totalQuestions,
       percentage: percentage,
@@ -376,12 +399,15 @@ if (!mongoose.Types.ObjectId.isValid(candidateId)) {
       status: "submitted",
       date: new Date()
     });
+ console.log("Results from DB:", result);
+
 
     await result.save();
     console.log("Result saved:", result._id);
 
     // Update assignment status
     assignment.status = 'completed';
+    submission.status='completed';
     assignment.completedAt = new Date();
     if (!assignment.startedAt) {
       assignment.startedAt = new Date();

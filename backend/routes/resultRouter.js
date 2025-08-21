@@ -45,6 +45,7 @@ const Result = require("../models/result");
 router.get("/", async (req, res) => {
   try {
     const { technology } = req.query;
+    console.log(req)
 
     let query = {};
     if (technology) {

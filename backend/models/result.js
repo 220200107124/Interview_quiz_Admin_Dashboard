@@ -18,11 +18,12 @@ const resultSchema = new mongoose.Schema({
 
   // // New status field
   // status: { type: String, enum: ["pending", "submitted"], default: "pending" },
-    status: {
-    type: String,
-    enum: ["pending", "in-progress", "completed", "expired"],
-    default: "pending",
-  },
+   status: {
+  type: String,
+  enum: ["pending", "submitted", "completed"], 
+  default: "pending"
+}
+,
 
   // Timestamps
   date: { type: Date, default: Date.now },

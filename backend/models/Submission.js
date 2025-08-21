@@ -42,8 +42,8 @@ const submissionSchema = new mongoose.Schema({
   // },
     status: {
     type: String,
-    enum: ["pending", "in-progress", "completed", "expired"],
-    default: "pending",
+    enum: ["pending", "submitted", "completed"], 
+    default: "pending"
   },
   submittedAt: {
     type: Date,
@@ -52,6 +52,6 @@ const submissionSchema = new mongoose.Schema({
 });
 
 // Prevent duplicate submissions
-submissionSchema.index({ assignment: 1, candidate: 1 }, { unique: true });
+// submissionSchema.index({ assignment: 1, candidate: 1 }, { unique: true });
 
 module.exports = mongoose.model("Submission", submissionSchema);

@@ -19,7 +19,7 @@ const candidateSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    tech: {
+    technology: {
       type: String,
       required: true,
       trim: true,

@@ -20,10 +20,10 @@ const assignmentSchema = new mongoose.Schema({
       return require("crypto").randomBytes(16).toString("hex");
     },
   },
-  status: {
+    status: {
     type: String,
-    enum: ["pending", "in-progress", "completed", "expired"],
-    default: "pending",
+    enum: ["pending", "submitted", "completed"], 
+    default: "pending"
   },
   assignedAt: {
     type: Date,

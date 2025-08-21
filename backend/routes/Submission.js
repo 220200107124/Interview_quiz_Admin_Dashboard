@@ -1,148 +1,149 @@
 //
 const express = require("express");
+const mongoose = require("mongoose");
+
 const router = express.Router();
 const Submission = require("../models/Submission");
 const Result = require("../models/result");
 const Quiz = require("../models/quizzes");
 const Assignment = require("../models/Assignment");
 
-// POST /api/submit-quiz
 
-router.post("/", async (req, res) => {
-  console.log("=== SUBMIT QUIZ ROUTE START ===");
-  try {
-    const {
-      assignmentId,
-      candidateId,
-      candidateName,
-      candidateEmail,
-      technology,
-      answers,
-    } = req.body;
+// router.post("/", async (req, res) => {
+//   console.log("=== SUBMIT QUIZ ROUTE START ===");
+//   try {
+//     console.log("request body",req.body);
+//     const {
+//       assignmentId,
+//       candidateId: bodyCandidateId,
+//       candidateName,
+//       candidateEmail,
+//       technology,
+//       answers,
+//     } = req.body;
 
-    console.log("Request body:", req.body);
+//     console.log("REQ BODY:", JSON.stringify(req.body, null, 2));
 
-    if (!assignmentId || !candidateId || !answers) {
-      console.log("Missing required fields");
-      return res.status(400).json({ error: "Missing required fields" });
-    }
+//     if (!assignmentId || !answers) {
+//       return res.status(400).json({ error: "Missing required fields" });
+//     }
 
-    if (!Array.isArray(answers)) {
-      return res.status(400).json({ error: "Answers must be an array" });
-    }
+//     if (!Array.isArray(answers)) {
+//       return res.status(400).json({ error: "Answers must be an array" });
+//     }
 
-    console.log("Basic validation passed");
-    console.log("Looking for assignment with ID:", assignmentId);
+//     // Fetch assignment + quiz
+//     const assignment = await Assignment.findById(assignmentId).populate("quizId");
+//     if (!assignment) {
+//       return res.status(404).json({ error: "Assignment not found" });
+//     }
 
-    const assignment = await Assignment.findOne({ _id: assignmentId }).populate(
-      "quizId"
-    );
+//     if (assignment.status === "completed") {
+//       return res.status(400).json({ error: "This assignment has already been completed" });
+//     }
 
-    if (!assignment) {
-      return res.status(404).json({ error: "Assignment not found" });
-    }
+//     const quiz = assignment.quizId;
+//     if (!quiz) {
+//       return res.status(404).json({ error: "Quiz not found in assignment" });
+//     }
 
-    if (assignment.status === "completed") {
-      return res
-        .status(400)
-        .json({ error: "This assignment has already been completed" });
-    }
+//     console.log("Quiz found:", {
+//       title: quiz.title,
+//       questionsCount: quiz.questions?.length,
+//     });
 
-    const quiz = assignment.quizId;
-    if (!quiz) {
-      return res.status(404).json({ error: "Quiz not found in assignment" });
-    }
+//     // --------- candidateId handling ----------
+//     let candidateId = bodyCandidateId || assignment.candidateId;
 
-    console.log("Quiz found:", {
-      title: quiz.title,
-      questionsCount: quiz.questions?.length,
-    });
+//     if (!candidateId) {
+//       return res.status(400).json({ error: "candidateId missing" });
+//     }
 
-    let correctAnswers = 0;
-    const totalQuestions = quiz.questions?.length || 0;
+//     // Ensure candidateId is a valid ObjectId
+//     if (!mongoose.Types.ObjectId.isValid(candidateId)) {
+//       return res.status(400).json({ error: "Invalid candidateId" });
+//     }
+//     candidateId = new mongoose.Types.ObjectId(candidateId);
 
-    // Format answers for Submission schema
-    const formattedAnswers = answers.map((answer, index) => {
-      const question = quiz.questions[index];
-      if (question) {
-        const userAnswer = String(answer);
-        const correctAnswer = String(question.correctAnswer);
-        if (userAnswer === correctAnswer) {
-          correctAnswers++;
-        }
-        return {
-          questionIndex: index,
-          selectedOption: userAnswer,
-        };
-      }
-      return { questionIndex: index, selectedOption: String(answer) };
-    });
+//     // --------- Score calculation ----------
+//     let correctAnswers = 0;
+//     const totalQuestions = quiz.questions?.length || 0;
 
-    const percentage =
-      totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
+//     const formattedAnswers = answers.map((answer, index) => {
+//       const question = quiz.questions[index];
+//       if (question) {
+//         const userAnswer = String(answer);
+//         const correctAnswer = String(question.correctAnswer);
+//         if (userAnswer === correctAnswer) {
+//           correctAnswers++;
+//         }
+//         return { questionIndex: index, selectedOption: userAnswer };
+//       }
+//       return { questionIndex: index, selectedOption: String(answer) };
+//     });
 
-    console.log(
-      `Score calculated: ${correctAnswers}/${totalQuestions} = ${percentage.toFixed(
-        1
-      )}%`
-    );
+//     const percentage =
+//       totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
 
-    // Save Submission
-    const submission = new Submission({
-      assignment: assignment._id, // matches schema
-      candidate: candidateId, // matches schema
-      answers: formattedAnswers,
-      submittedAt: new Date(),
-      technology,
-    });
+//     console.log(
+//       `Score: ${correctAnswers}/${totalQuestions} = ${percentage.toFixed(1)}%`
+//     );
 
-    await submission.save();
-    console.log("Submission saved:", submission._id);
+//     // --------- Save Submission ----------
+//     const submission = new Submission({
+//       assignment: assignment._id,
+//       candidate: candidateId,
+//       answers: formattedAnswers,
+//       submittedAt: new Date(),
+//       technology,
+//     });
+//     await submission.save();
+//     console.log("Submission saved:", submission._id);
 
-    // Save Result
-    const result = new Result({
-      candidateName,
-      candidateEmail,
-      quizTitle: quiz.title,
-      technology: quiz.technology || "NOT Define",
-      score: correctAnswers,
-      totalQuestions: totalQuestions,
-      percentage: percentage,
-      attempts: 1,
-      status: "submitted",
-      date: new Date(),
-    });
+//     // --------- Save Result ----------
+//     const result = new Result({
+//       candidateName,
+//       candidateEmail,
+//       quizTitle: quiz.title,
+//       technology: quiz.technology || "NOT Defined",
+//       score: correctAnswers,
+//       totalQuestions,
+//       percentage,
+//       attempts: 1,
+//       status: "submitted",
+//       date: new Date(),
+//     });
+//     await result.save();
+//     console.log("Result saved:", result._id);
 
-    await result.save();
-    console.log("Result saved:", result._id);
+//     // --------- Update assignment ----------
+//     assignment.status = "completed";
+//     assignment.completedAt = new Date();
+//     if (!assignment.startedAt) {
+//       assignment.startedAt = new Date();
+//     }
+//     await assignment.save();
+//     console.log("Assignment updated to completed");
 
-    // Update assignment status
-    assignment.status = "completed";
-    assignment.completedAt = new Date();
-    if (!assignment.startedAt) {
-      assignment.startedAt = new Date();
-    }
-    await assignment.save();
+//     return res.status(200).json({
+//       message: "Quiz submitted successfully!",
+//       score: `${correctAnswers}/${totalQuestions} (${percentage.toFixed(1)}%)`,
+//       submissionId: submission._id,
+//       resultId: result._id,
+//       assignmentId: assignment._id,
+//       candidateId: candidateId,
+//     });
+//   } catch (err) {
+//     console.error("Submit quiz error:", err);
+//     return res.status(500).json({
+//       error: "Server error",
+//       details: process.env.NODE_ENV === "development" ? err.message : undefined,
+//     });
+//   }
+// });
 
-    console.log("Assignment status updated to completed");
 
-    return res.status(200).json({
-      message: "Quiz submitted successfully!",
-      score: `${correctAnswers}/${totalQuestions} (${percentage.toFixed(1)}%)`,
-      submissionId: submission._id,
-      resultId: result._id,
-      assignmentId: assignment._id,
-    });
-  } catch (err) {
-    console.error("Submit quiz error:", err);
-    return res.status(500).json({
-      error: "Server error",
-      details: process.env.NODE_ENV === "development" ? err.message : undefined,
-    });
-  }
-});
 
-// router.post('/', async (req, res) => {
 //   console.log("=== SUBMIT QUIZ ROUTE START ===");
 //   try {
 //     const { assignmentId, candidateId, candidateName, candidateEmail, answers } = req.body;
@@ -273,6 +274,139 @@ router.post("/", async (req, res) => {
 // });
 
 // GET /api/submit-quiz/result/:resultId - Get submission result
+
+router.post('/', async (req, res) => {
+  console.log("=== SUBMIT QUIZ ROUTE START ===");
+  try {
+     
+    const { assignmentId, candidateName, candidateEmail, answers } = req.body;
+   // from DB
+
+    console.log("Request body:", req.body);
+
+    if (!assignmentId  || !answers) {
+      console.log("Missing required fields");
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    if (!Array.isArray(answers)) {
+      return res.status(400).json({ error: "Answers must be an array" });
+    }
+
+    console.log("Basic validation passed");
+    console.log("Looking for assignment with ID:", assignmentId);
+
+    const assignment = await Assignment.findOne({ _id: assignmentId }).populate('quizId');
+    const candidateId = assignment.candidateId;
+      if (!candidateId) {
+      console.log("Missing candidateId");
+      return res.status(400).json({ error: "Missing candidateId" });
+    }
+    if (!assignment) {
+      return res.status(404).json({ error: "Assignment not found" });
+    }
+
+    if (assignment.status === 'completed') {
+      return res.status(400).json({ error: "This assignment has already been completed" });
+    }  
+
+
+
+       if (!mongoose.Types.ObjectId.isValid(assignmentId)) {
+  return res.status(400).json({ error: "Invalid assignmentId" });
+}
+if (!mongoose.Types.ObjectId.isValid(candidateId)) {
+  return res.status(400).json({ error: "Invalid candidateId" });
+}
+
+
+    const quiz = assignment.quizId;
+    if (!quiz) {
+      return res.status(404).json({ error: "Quiz not found in assignment" });
+    }
+
+    console.log("Quiz found:", { title: quiz.title, questionsCount: quiz.questions?.length });
+
+    let correctAnswers = 0;
+    const totalQuestions = quiz.questions?.length || 0;
+
+    // Format answers for Submission schema
+    const formattedAnswers = answers.map((answer, index) => {
+      const question = quiz.questions[index];
+      if (question) {
+        const userAnswer = String(answer);
+        const correctAnswer = String(question.correctAnswer);
+        if (userAnswer === correctAnswer) {
+          correctAnswers++;
+        }
+        return {
+          questionIndex: index,
+          selectedOption: userAnswer
+        };
+      }
+      return { questionIndex: index, selectedOption: String(answer) };
+    });
+
+    const percentage = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
+
+    console.log(`Score calculated: ${correctAnswers}/${totalQuestions} = ${percentage.toFixed(1)}%`);
+
+    // Save Submission
+    const submission = new Submission({
+      assignment: assignment._id, // matches schema
+      candidate: candidateId._id, // matches schema
+      answers: formattedAnswers,
+      submittedAt: new Date()
+    });
+
+    await submission.save();
+    console.log("Submission saved:", submission._id);
+
+    // Save Result
+    const result = new Result({
+      candidateName,
+      candidateId,
+      candidateEmail,
+      quizTitle: quiz.title,
+      technology: quiz.technology || "N/A",
+      score: correctAnswers,
+      totalQuestions: totalQuestions,
+      percentage: percentage,
+      attempts: 1,
+      status: "submitted",
+      date: new Date()
+    });
+
+    await result.save();
+    console.log("Result saved:", result._id);
+
+    // Update assignment status
+    assignment.status = 'completed';
+    assignment.completedAt = new Date();
+    if (!assignment.startedAt) {
+      assignment.startedAt = new Date();
+    }
+    await assignment.save();
+
+    console.log("Assignment status updated to completed");
+
+    return res.status(200).json({
+      message: "Quiz submitted successfully!",
+      score: `${correctAnswers}/${totalQuestions} (${percentage.toFixed(1)}%)`,
+      submissionId: submission._id,
+      resultId: result._id,
+      assignmentId: assignment._id
+    });
+
+  } catch (err) {
+    console.error("Submit quiz error:", err);
+    return res.status(500).json({
+      error: "Server error",
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
+});
+
 router.get("/result/:resultId", async (req, res) => {
   try {
     const result = await Result.findById(req.params.resultId);

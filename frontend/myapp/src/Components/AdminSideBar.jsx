@@ -48,10 +48,10 @@ function AdminSideBar() {
           <button onClick={() => handleNavigate("/admin-result")}>
             Results
           </button>
-          {/* <button onClick={() => handleNavigate("/quiz/:candidateId")}>
+          <button onClick={() => handleNavigate("/quiz/:candidateId")}>
             {" "}
             CandidateQuizPage
-          </button> */}
+          </button>
           <button
             onClick={() => {
 

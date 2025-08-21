@@ -15,6 +15,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+
 // import { useNavigate } from "react-router-dom";
 
 function AdminResult() {
@@ -27,51 +28,70 @@ function AdminResult() {
   // const handleDashBoard = () => navigate("/admin");
 
   useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/result`);
-        const data = await res.json();
-        setResults(data);
+  const fetchResults = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/result`);
+      const data = await res.json();
+      console.log("=== Raw Results from API ===", data); // 👈 all results from API
+      setResults(data);
 
-        const summary = {};
-        data.forEach((r) => {
-          // Unique key per candidate + quiz title
-          const key = `${r.candidateName}__${r.quizTitle}`;
-          if (!summary[key]) {
-            summary[key] = {
-              candidateName: r.candidateName,
-              quizTitle: r.quizTitle,
-              technology: r.technology,
-              attempts: 0,
-              totalScore: 0,
-              attemptsData: [],
-            };
-            console.log(  "technology",r.technology);
-          }
-          summary[key].attempts += 1;
-          summary[key].totalScore += r.score;
-          summary[key].attemptsData.push(r);
-        });
+      const summary = {};
+      data.forEach((r) => {
+        // Debug log each record
+        console.log(
+          `Candidate: ${r.candidateName}, Quiz: ${r.quizTitle}, Tech: ${r.tech}, Score: ${r.score}, Total Qs: ${r.totalQuestions}, Status: ${r.status}, Date: ${r.date}`
+        );
 
-        // Sort each quiz's attempts by latest first
-        Object.keys(summary).forEach((key) => {
-          summary[key].attemptsData.sort(
-            (a, b) => new Date(b.date) - new Date(a.date)
-          );
-        });
+        // Unique key per candidate + quiz title
+        const key = `${r.candidateName}__${r.quizTitle}`;
+        if (!summary[key]) {
+          summary[key] = {
+            candidateName: r.candidateName,
+            quizTitle: r.quizTitle,
+            tech: r.tech,
+            attempts: 0,
+            totalScore: 0,
+            attemptsData: [],
+          };
+          console.log("⚡ First entry for:", r.candidateName, "in", r.quizTitle);
+        }
+        summary[key].attempts += 1;
+        summary[key].totalScore += r.score;
+        summary[key].attemptsData.push(r);
 
-        setCandidateSummary(summary);
-      } catch (error) {
-        console.error("Error fetching results:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        console.log(
+          ` Updated Summary [${key}]: Attempts=${summary[key].attempts}, TotalScore=${summary[key].totalScore}`
+        );
+      });
 
-    fetchResults();
-  }, []);
+      // Sort each quiz's attempts by latest first
+      Object.keys(summary).forEach((key) => {
+        summary[key].attemptsData.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        console.log(
+          ` Sorted Attempts for ${key}:`,
+          summary[key].attemptsData.map((x) => ({
+            score: x.score,
+            date: x.date,
+          }))
+        );
+      });
 
+      console.log("=== Final Candidate Summary ===", summary);
+      setCandidateSummary(summary);
+    } catch (error) {
+      console.error(" Error fetching results:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchResults();
+}, []);
+
+console.log();
   // Chart: average score per quiz per candidate
   const chartData = Object.keys(candidateSummary).map((key) => ({
     candidateName: candidateSummary[key].candidateName,
@@ -158,7 +178,7 @@ function AdminResult() {
                       <tr key={`${r._id}-${idx}`}>
                         <td>{r.candidateName}</td>
                         <td>{r.quizTitle}</td>
-                        <td>{r.technology}</td>
+                        <td>{r.tech}</td>
                         <td>
                           {r.score} / {r.totalQuestions}
                         </td>

@@ -104,55 +104,6 @@ const handleSubmitAll = async () => {
 };
 
 
-// const handleSubmitAll = async () => {
-//   if (Object.keys(selectedAnswers).length !== quizzes.length) {
-//     setMessage({ type: 'error', text: 'Please answer all questions before submitting!' });
-//     return;
-//   }
-
-//   const formattedAnswers = quizzes.map((q, index) => ({
-//     questionId: q._id,
-//     answer: q.options[selectedAnswers[index]]
-//   }));
-//   console.log("Answer" ,formattedAnswers);
-
-//   try {
-//     const res = await axios.post(
-//       `${process.env.REACT_APP_API_URL}/api/submit-quiz`,
-      
-//       {
-//         assignmentId,                         
-//         candidateId,           
-//         candidateName: candidate?.name || '',
-//         candidateEmail: candidate?.email || '',
-//         technology: candidate?.tech || '', 
-//         answers: formattedAnswers
-//       },
-      
-//       {
-//         headers: { "Content-Type": "application/json" }
-//       }
-      
-//     );
- 
-//        console.log("candidate " ,res.data);
-//        console.log("technology",candidate.tech);
-
-//     setSubmitted(true);
-//     setMessage({ type: 'success', text: res.data.message || 'Quiz submitted successfully!' });
-
-//     setTimeout(() => navigate('/thank-you'), 2000);
-
-//   } catch (err) {
-//     console.error('Submission error:', err);
-//     if (err.response?.status === 400 && err.response?.data?.error?.includes("already")) {
-//       setMessage({ type: 'info', text: 'You have already submitted this quiz.' });
-//       setSubmitted(true);
-//     } else {
-//       setMessage({ type: 'error', text: 'Error submitting quiz, please try again.' });
-//     }
-//   }
-// };
 
 
 

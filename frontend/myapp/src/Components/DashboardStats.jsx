@@ -24,7 +24,7 @@ const DashboardStats = () => {
     };
 
     fetchStats();
-  }, []);
+  }, [setStats]);
 
   if (loading) {
     return <div className="container"><p>Loading stats...</p></div>;

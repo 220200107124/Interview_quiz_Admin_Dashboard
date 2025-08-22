@@ -73,11 +73,11 @@ const handleSubmitAll = async () => {
       `${process.env.REACT_APP_API_URL}/api/submit-quiz`,
       
       {
-        assignmentId,                         // must be correct
-        candidateId,           //  real ObjectId
+        assignmentId,                         
+        candidateId,           
         candidateName: candidate?.name || '',
         candidateEmail: candidate?.email || '',
-        technology: candidate?.tech || '', // check your schema
+        technology: candidate?.tech || '', 
         answers: formattedAnswers
       },
       

@@ -107,6 +107,8 @@ console.log();
     (key) => candidateSummary[key].attemptsData[0]
   );
 
+  console.log("latestResults",latestResults)
+
   return (
     <>
       <main className="results-container">
@@ -176,7 +178,7 @@ console.log();
                     const attempts = candidateSummary[key]?.attempts || 1;
                     return (
                       <tr key={`${r._id}-${idx}`}>
-                        <td>{r.candidateName}</td>
+                        <td>{r?.candidateId?.name}</td>
                         <td>{r.quizTitle}</td>
                         <td>{r.tech}</td>
                         <td>
@@ -189,7 +191,7 @@ console.log();
                           <button
                             className="view-btn"
                             onClick={() =>
-                              setSelectedCandidate(r.candidateName)
+                              setSelectedCandidate(r)
                             }
                           >
                             View Detail
@@ -208,10 +210,7 @@ console.log();
 
       {selectedCandidate && (
         <CandidateModal
-          candidateName={selectedCandidate}
-          details={Object.values(candidateSummary).filter(
-            (q) => q.candidateName === selectedCandidate
-          )}
+          details={selectedCandidate}
           onClose={() => setSelectedCandidate(null)}
         />
       )}

@@ -7,8 +7,7 @@ const Quiz = require("../models/quizzes");
 const Assignment = require("../models/Assignment");
 const sendMail = require("../email");
 
-// POST /api/assign/:candidateId
-// Assign a quiz to a candidate. If the same (candidateId, quizId) exists, update assignedAt & status instead of creating duplicate.
+
 
 router.post("/assign/:candidateId", async (req, res) => {
   console.log("POST assign method begins");

@@ -1,5 +1,5 @@
 // utils/initSuperAdmin.js
-const Admin = require("../models/admin"); // adjust the casing to your file
+const Admin = require("../module/auth/entity/auth"); // adjust the casing to your file
 const bcrypt = require("bcrypt");
 require("dotenv").config(); // load env variables
 

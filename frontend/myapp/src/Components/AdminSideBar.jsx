@@ -13,10 +13,6 @@ function AdminSideBar() {
     setSidebarOpen(false); // auto close sidebar on mobile
   };
 
-  // const handleLogout = () => {
-
-  //   navigate('/admin-login');
-  // };
 
   return (
     <>
@@ -42,16 +38,11 @@ function AdminSideBar() {
 
             +Quiz
           </button>
-          {/* <button onClick={() => handleNavigate("/admin-candidate")}>
-            Candidates
-          </button> */}
+         
           <button onClick={() => handleNavigate("/admin-result")}>
             Results
           </button>
-          <button onClick={() => handleNavigate("/quiz/:candidateId")}>
-            {" "}
-            CandidateQuizPage
-          </button>
+        
           <button
             onClick={() => {
 

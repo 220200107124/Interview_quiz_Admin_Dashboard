@@ -102,7 +102,7 @@ function AdminLogin({ onLogin }) {
 
     try {
       // Replace this URL with your backend login route
-      const response = await axios.post( `${process.env.REACT_APP_API_URL}/api/admin/login`, {
+      const response = await axios.post( `${process.env.REACT_APP_API_URL}/api/auth/login`, {
         email,
         password,
       });

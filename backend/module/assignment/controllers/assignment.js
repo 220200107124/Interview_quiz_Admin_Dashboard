@@ -1,75 +1,5 @@
-const Candidate = require("../models/candidate");
-const Quiz = require("../models/quizzes");
-const Assignment = require("../models/Assignment");
+const Assignment = require("../../candidate/entity/Assignment");
 const crypto = require("crypto");
-
-// Assign quiz
-const assignQuiz = async (req, res) => {
-  console.log("POST assign method begins");
-
-  try {
-    const { candidateId } = req.params;
-    const { quizId, title } = req.body;
-
-    if (!quizId) return res.status(400).json({ message: "quizId is required" });
-
-    const candidate = await Candidate.findById(candidateId);
-    if (!candidate)
-      return res.status(404).json({ message: "Candidate not found" });
-
-    const quiz = await Quiz.findById(quizId);
-    if (!quiz) return res.status(404).json({ message: "Quiz not found" });
-
-    // check existing assignment
-    let assignment = await Assignment.findOne({ candidateId, quizId });
-
-    if (assignment) {
-      const newToken = crypto.randomBytes(16).toString("hex");
-      assignment.token = newToken;
-      assignment.status = "pending";
-      assignment.assignedAt = new Date();
-      await assignment.save();
-
-      return res.status(200).json({
-        message: "Quiz reassigned",
-        assignment,
-        token: newToken,
-      });
-    }
-
-    // create new
-    const token = crypto.randomBytes(16).toString("hex");
-    assignment = new Assignment({
-      candidateId,
-      quizId,
-      token,
-      status: "pending",
-      assignedAt: new Date(),
-    });
-
-    await assignment.save();
-
-    // update candidate record if needed
-    if (
-      candidate.assignedQuizzes &&
-      !candidate.assignedQuizzes.includes(quizId)
-    ) {
-      candidate.assignedQuizzes.push(quizId);
-      await candidate.save();
-    }
-
-    return res.status(201).json({
-      message: "Quiz assigned successfully",
-      assignment,
-      token,
-    });
-  } catch (err) {
-    console.error("Assign error:", err);
-    return res
-      .status(500)
-      .json({ message: "Server error", error: err.message });
-  }
-};
 
 // Reassign (PATCH)
 const reassignQuiz = async (req, res) => {
@@ -151,4 +81,52 @@ const getByToken = async (req, res) => {
   }
 };
 
-module.exports = { assignQuiz, reassignQuiz, getByToken };
+// GET /assignments/candidate/:candidateId
+const getLatestAssignmentByCandidate = async (req, res) => {
+  try {
+    const { candidateId } = req.params;
+    if (!candidateId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "Invalid candidate ID format" });
+    }
+
+    const latest = await Assignment.findOne({ candidateId })
+      .sort({ assignedAt: -1 })
+      .populate("quizId")
+      .exec();
+
+    if (!latest) return res.status(404).json({ message: "No quiz assigned" });
+
+    return res.status(200).json(latest);
+  } catch (err) {
+    console.error("Fetch latest assignment error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+// GET /assignment/:assignmentId
+const getAssignmentById = async (req, res) => {
+  try {
+    const { assignmentId } = req.params;
+    if (!assignmentId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "Invalid assignment ID format" });
+    }
+
+    const assignment = await Assignment.findById(assignmentId)
+      .populate("quizId")
+      .exec();
+
+    if (!assignment)
+      return res.status(404).json({ message: "Assignment not found" });
+
+    return res.status(200).json(assignment);
+  } catch (err) {
+    console.error("Get assignment error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = {
+  reassignQuiz,
+  getByToken,
+  getLatestAssignmentByCandidate,
+  getAssignmentById,
+};

@@ -1,24 +1,16 @@
-const express = require("express");
 const jwt = require("jsonwebtoken");
-
-const Admin = require("../models/admin.js");
 const bcrypt = require("bcrypt");
+const Auth = require("../entity/auth");
 
-
-require("dotenv").config(); // load env variables
-const router = express.Router();
-
-
-// Admin login route
-router.post("/login", async (req, res) => {
-  try {
+const login = async (req, res) => {
+     try {
     const { email, password } = req.body;
 
     if (!email || !password)
       return res.status(400).json({ message: "Email and password required" });
 
     // Find admin in DB
-    const admin = await Admin.findOne({ email });
+    const admin = await Auth.findOne({ email });
     if (!admin)
       return res.status(401).json({ message: "Invalid email or password" });
 
@@ -40,8 +32,8 @@ router.post("/login", async (req, res) => {
     console.error("Admin login error:", error);
     res.status(500).json({ message: "Server error" });
   }
-});
+}
 
 
 
-module.exports = router;
+module.exports  = {login}

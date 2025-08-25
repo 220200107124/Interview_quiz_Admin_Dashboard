@@ -1,19 +1,56 @@
-const Candidate = require("../models/candidate");
-const Assignment = require("../models/Assignment");
-const sendMail = require("../email");
+const Candidate = require("../entity/candidate");
+const Assignment = require("../entity/Assignment");
+const sendMail = require("./email");
 
 // GET all candidates
-exports.getAllCandidates = async (req, res) => {
-  try {
-    const candidates = await Candidate.find();
-    res.json(candidates);
+const getAllCandidates = async (req, res) => {
+
+
+   try {
+    const candidates = await Candidate.aggregate([
+      {
+        $lookup: {
+          from: "assignments", // collection name in MongoDB (plural, lowercase)
+          localField: "_id",
+          foreignField: "candidateId",
+          as: "assignments",
+        },
+      },
+      {
+        $addFields: {
+          token: {
+            $cond: {
+              if: { $gt: [{ $size: "$assignments" }, 0] },
+              then: { $arrayElemAt: ["$assignments.token", 0] },
+              else: null,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          assignments: 0, // hide full assignments array
+        },
+      },
+    ]);
+
+    res.status(200).json(candidates);
   } catch (err) {
+    console.error("Error fetching candidates with token:", err);
     res.status(500).json({ error: "Server error" });
   }
+
+  
+  // try {
+  //   const candidates = await Candidate.find();
+  //   res.json(candidates);
+  // } catch (err) {
+  //   res.status(500).json({ error: "Server error" });
+  // }
 };
 
 // GET single candidate
-exports.getCandidateById = async (req, res) => {
+const getCandidateById = async (req, res) => {
   try {
     const candidate = await Candidate.findById(req.params.id);
     if (!candidate)
@@ -25,7 +62,7 @@ exports.getCandidateById = async (req, res) => {
 };
 
 // POST add new candidate
-exports.addCandidate = async (req, res) => {
+const addCandidate = async (req, res) => {
   try {
     const newCandidate = new Candidate(req.body);
     const saved = await newCandidate.save();
@@ -36,7 +73,7 @@ exports.addCandidate = async (req, res) => {
 };
 
 // PUT update candidate
-exports.updateCandidate = async (req, res) => {
+const updateCandidate = async (req, res) => {
   try {
     const updated = await Candidate.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -49,7 +86,7 @@ exports.updateCandidate = async (req, res) => {
 };
 
 // DELETE candidate
-exports.deleteCandidate = async (req, res) => {
+const deleteCandidate = async (req, res) => {
   try {
     await Candidate.findByIdAndDelete(req.params.id);
     res.json({ message: "Candidate deleted" });
@@ -59,7 +96,7 @@ exports.deleteCandidate = async (req, res) => {
 };
 
 // SEND quiz email
-exports.sendQuizEmail = async (req, res) => {
+const sendQuizEmail = async (req, res) => {
   try {
     const candidate = await Candidate.findById(req.params.candidateId);
     if (!candidate)
@@ -94,3 +131,10 @@ exports.sendQuizEmail = async (req, res) => {
       .json({ message: "Failed to send email", error: error.message });
   }
 };
+ module.exports={getAllCandidates,getCandidateById,
+                 addCandidate,updateCandidate,
+                 deleteCandidate,sendQuizEmail,
+
+
+
+ };

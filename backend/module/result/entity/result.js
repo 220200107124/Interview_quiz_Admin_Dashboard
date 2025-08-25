@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const resultSchema = new mongoose.Schema({
   candidateId: { type: mongoose.Schema.Types.ObjectId, ref: "Candidate", required: true },
-
   quizTitle: { type: String, required: true },
   tech: { type: String, required: true },
   score: { type: Number, required: true, default: 0 },

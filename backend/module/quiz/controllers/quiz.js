@@ -1,8 +1,8 @@
-const Quiz = require("../models/quizzes");
-const Candidate = require("../models/candidate");
+const Quiz = require("../entity/quizzes");
+// const Candidate = require("../../../candidate.js");
 
 // Create quiz
-exports.createQuiz = async (req, res) => {
+const  createQuiz = async (req, res) => {
   try {
     const quiz = new Quiz(req.body);
     await quiz.save();
@@ -13,7 +13,7 @@ exports.createQuiz = async (req, res) => {
 };
 
 // Get all quizzes
-exports.getAllQuizzes = async (req, res) => {
+const  getAllQuizzes = async (req, res) => {
   try {
     const quizzes = await Quiz.find().sort({ createdAt: -1 });
     res.json(quizzes);
@@ -23,7 +23,7 @@ exports.getAllQuizzes = async (req, res) => {
 };
 
 // Get quizzes of a candidate
-exports.getCandidateQuizzes = async (req, res) => {
+const  getCandidateQuizzes = async (req, res) => {
   try {
     const candidate = await Candidate.findById(req.params.candidateId).populate(
       "quizzes.quiz"
@@ -38,7 +38,7 @@ exports.getCandidateQuizzes = async (req, res) => {
 };
 
 // Update quiz
-exports.updateQuiz = async (req, res) => {
+const  updateQuiz = async (req, res) => {
   try {
     const updatedQuiz = await Quiz.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -50,7 +50,7 @@ exports.updateQuiz = async (req, res) => {
 };
 
 // Delete quiz
-exports.deleteQuiz = async (req, res) => {
+const  deleteQuiz = async (req, res) => {
   try {
     await Quiz.findByIdAndDelete(req.params.id);
     res.json({ message: "Quiz deleted" });
@@ -60,7 +60,7 @@ exports.deleteQuiz = async (req, res) => {
 };
 
 // Add question
-exports.addQuestion = async (req, res) => {
+const  addQuestion = async (req, res) => {
   try {
     const { question, options, correctAnswer } = req.body;
     if (!question || !options || correctAnswer === undefined) {
@@ -80,7 +80,7 @@ exports.addQuestion = async (req, res) => {
 };
 
 // Edit question
-exports.editQuestion = async (req, res) => {
+const  editQuestion = async (req, res) => {
   try {
     const { quizId, questionId } = req.params;
     const { question, options, correctAnswer } = req.body;
@@ -103,7 +103,7 @@ exports.editQuestion = async (req, res) => {
 };
 
 // Delete question
-exports.deleteQuestion = async (req, res) => {
+const  deleteQuestion = async (req, res) => {
   try {
     const { quizId, questionId } = req.params;
     const quiz = await Quiz.findById(quizId);
@@ -117,3 +117,7 @@ exports.deleteQuestion = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+module.exports={createQuiz,getAllQuizzes,getCandidateQuizzes,updateQuiz,deleteQuiz,addQuestion,editQuestion
+,deleteQuestion,
+}

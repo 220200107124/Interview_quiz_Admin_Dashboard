@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./AdminCandidatePage.css";
+import { useNavigate } from "react-router";
 
 
 
@@ -66,7 +67,7 @@ const AdminCandidatePage = () => {
   const [sending, setSending] = useState(false);
   const [editingCandidate, setEditingCandidate] = useState(null);
   const [isDisabled, setIsDisabled] = useState(false);
-
+const navigate = useNavigate();
   const [newCandidate, setNewCandidate] = useState({
     name: "",
     lname: "",
@@ -92,25 +93,41 @@ const AdminCandidatePage = () => {
     "Graphic Design",
   ];
   const difficultyOptions = ["Easy", "Beginner", "Intermediate", "Advanced"];
+  
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+          
       try {
+        
         const [cRes, qRes] = await Promise.all([
           axios.get(`${process.env.REACT_APP_API_URL}/api/candidates`),
+          
+
           axios.get(`${process.env.REACT_APP_API_URL}/api/quizzes`),
         ]);
+       console.log(cRes,"api success");
         setCandidates(cRes.data);
         setQuizzes(qRes.data);
+       
+
       } catch (err) {
         console.error("Fetch error:", err);
+        console.error("Status:", err.response?.status);
+        console.error("Data:", err.response?.data);
+        console.error("Config:", err.config.url);
+   
       } finally {
         setLoading(false);
       }
     };
     fetchData();
+   
+
   }, []);
+
+
 
   const handleAddCandidate = async () => {
     if (!newCandidate.name || !newCandidate.lname || !newCandidate.email) {
@@ -128,6 +145,7 @@ const AdminCandidatePage = () => {
         `${process.env.REACT_APP_API_URL}/api/candidates`,
         newCandidate
       );
+      console.log("response");
       setCandidates((prev) => [...prev, res.data]);
       setNewCandidate({
         name: "",
@@ -171,6 +189,7 @@ const AdminCandidatePage = () => {
         await axios.delete(
           `${process.env.REACT_APP_API_URL}/api/candidates/${id}`
         );
+        
         setCandidates(candidates.filter((c) => c._id !== id));
       } catch (err) {
         console.error("Delete error:", err);
@@ -215,7 +234,7 @@ const AdminCandidatePage = () => {
       // Try to assign quiz (POST request)
       console.log("Attempting to assign quiz...");
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/assign/assign/${candidate._id}`,
+        `${process.env.REACT_APP_API_URL}/api/assign/${candidate._id}`,
         {
           quizId: matchingQuiz._id,
           title: matchingQuiz.title,
@@ -375,7 +394,18 @@ const AdminCandidatePage = () => {
                             onClick={() => handleDeleteCandidate(candidate._id)}
                           >
                             <TrashIcon />
-                          </button>
+                            </button>
+                            {
+                              candidate.token && 
+
+
+  <button  onClick={()=>{
+    navigate(`/quiz/${candidate.token}`)
+  }}> Test </button>
+                              
+                            }
+                          
+                          
                         </td>
                       </tr>
                     ))}

@@ -1,105 +1,31 @@
-require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
-const bodyparser=require("body-parser");
-const candidateRoutes = require("./routes/candidateRoutes");
-const AdminCreateQuizs = require("./routes/quizzesRoutes");
-const assignQuizRouter = require("./routes/assignQuiz");
-const resultRoutes = require("./routes/resultRouter");
-const quizByCandidateRouter = require("./routes/quizByCandidate");
-const submitQuizRouter = require("./routes/Submission");
-const States=require("./routes/State");
-const assignment =require("./routes/assignments");
-const LoginAuth=require("./routes/admin_auth");
-
-// const updateAssignmentRouter=require("./routes/updateAssignment")
-
-// modules
-
-const Candidate = require("./models/quizzes"); 
-const Quiz = require("./models/candidate"); 
-const Result = require("./models/result");
-const Submission = require("./models/Submission");
-const Assignment=require("./models/Assignment");
+const dotenv = require("dotenv");
+const routes = require("./routes/routeManager");
 const createSuperAdmin = require("./utils/initSuperAdmin");
+const cors = require("cors");
+const bodyparser = require("body-parser");
 
-
-
+dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 app.use(bodyparser.json());
 
+// Use route manager
+app.use("/api", routes);
 
-
-
-// mongodb connection
 mongoose
-  .connect(process.env.MONGO_URI, {
- 
+  .connect(process.env.MONGO_URI, {})
+  .then(() => {
+    console.log("MongoDB connected");
+    createSuperAdmin();
   })
-  .then(() =>{ console.log("MongoDB connected")
-  createSuperAdmin();
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
 
-
-
-  })
-  .catch((err) => console.error("MongoDB error:", err));
-
-
-
- app.get("/", async (req, res) => {
-   try {     const candidates = await Candidate.find().limit(5); // just showing top 5
-   const quizzes = await Quiz.find().limit(5);
-    const results = await Result.find().limit(5);
-
-   res.send(`
-     <h2> Backend Server is Running! </h2>
-           <p>Available API Routes:</p>
-    <ul>
-         <li><code>GET /api/candidates</code></li>
-         <li><code>GET /api/quizzes</code></li>
-         <li><code>GET /api/assign</code></li>
-         <li><code>GET /api/results</code></li>
-         <li><code>Patch/api/assign/:candidateId</code></li>
-       </ul>
-       <hr />
-       <h3> Sample Candidates:</h3>
-       <pre>${JSON.stringify(candidates, null, 2)}</pre>
-
-       <h3> Sample Quizzes:</h3>
-       <pre>${JSON.stringify(quizzes, null, 2)}</pre>
-
-       <h3> Sample Results:</h3>
-       <pre>${JSON.stringify(results, null, 2)}</pre>
-       
-     `);  
-    
-    } catch (err) {
-     console.error(err);
-     res.status(500).send("Error fetching data from MongoDB");
-   } });
-
-
-
-//api routes
-app.use("/api/admin",LoginAuth);
-app.use("/api/candidates", candidateRoutes);
-app.use("/api/quizzes", AdminCreateQuizs);
-app.use("/api/assign", assignQuizRouter);
-app.use("/api/result", resultRoutes);
-app.use("/api/quiz-by-candidate", quizByCandidateRouter);
-app.use("/api/submit-quiz", submitQuizRouter);
-app.use("/api/state",States);
-app.use("/api/assignment",assignment);
-// app.use("api/assign",updateAssignmentRouter);
-
-
-
-
-
-// connection
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

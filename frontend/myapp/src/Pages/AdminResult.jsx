@@ -33,7 +33,7 @@ function AdminResult() {
       setLoading(true);
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/result`);
       const data = await res.json();
-      console.log("=== Raw Results from API ===", data); // 👈 all results from API
+      console.log("=== Raw Results from API ===", data); //  all results from API
       setResults(data);
 
       const summary = {};
@@ -54,7 +54,8 @@ function AdminResult() {
             totalScore: 0,
             attemptsData: [],
           };
-          console.log("⚡ First entry for:", r.candidateName, "in", r.quizTitle);
+          console.log(" First entry for:", r.candidateName, "in", r.quizTitle);
+
         }
         summary[key].attempts += 1;
         summary[key].totalScore += r.score;
@@ -79,7 +80,7 @@ function AdminResult() {
         );
       });
 
-      console.log("=== Final Candidate Summary ===", summary);
+      console.log(" Final Candidate Summary", summary);
       setCandidateSummary(summary);
     } catch (error) {
       console.error(" Error fetching results:", error);
@@ -91,7 +92,7 @@ function AdminResult() {
   fetchResults();
 }, []);
 
-console.log();
+
   // Chart: average score per quiz per candidate
   const chartData = Object.keys(candidateSummary).map((key) => ({
     candidateName: candidateSummary[key].candidateName,
@@ -101,6 +102,7 @@ console.log();
     fill:
       candidateSummary[key].totalScore > 0 ? "#82ca9d" : "#8884d8",
   }));
+ 
 
   // Latest attempt for each quiz per candidate
   const latestResults = Object.keys(candidateSummary).map(
